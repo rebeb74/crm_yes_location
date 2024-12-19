@@ -26,10 +26,9 @@ public class AuthService(IConfiguration configuration) : IAuthService
 
   public string CreateToken(int userId)
   {
-    Claim[] claims = new[]
-    {
-                new Claim("userId", userId.ToString())
-            };
+    Claim[] claims = [
+      new Claim("userId", userId.ToString())
+    ];
 
     string? tokenKeyString = _configuration.GetSection("AppSettings:TokenKey").Value;
 
