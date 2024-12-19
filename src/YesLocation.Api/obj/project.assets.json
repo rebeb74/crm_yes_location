@@ -2188,6 +2188,46 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
+      },
+      "YesLocation.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "YesLocation.Domain": "1.0.0",
+          "itext7": "8.0.2",
+          "itext7.pdfhtml": "5.0.2"
+        },
+        "compile": {
+          "bin/placeholder/YesLocation.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/YesLocation.Application.dll": {}
+        }
+      },
+      "YesLocation.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/YesLocation.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/YesLocation.Domain.dll": {}
+        }
+      },
+      "YesLocation.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "8.0.2",
+          "Pomelo.EntityFrameworkCore.MySql": "8.0.1",
+          "YesLocation.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/YesLocation.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/YesLocation.Infrastructure.dll": {}
+        }
       }
     }
   },
@@ -6820,18 +6860,31 @@
         "system.xml.xmldocument.4.3.0.nupkg.sha512",
         "system.xml.xmldocument.nuspec"
       ]
+    },
+    "YesLocation.Application/1.0.0": {
+      "type": "project",
+      "path": "../YesLocation.Application/YesLocation.Application.csproj",
+      "msbuildProject": "../YesLocation.Application/YesLocation.Application.csproj"
+    },
+    "YesLocation.Domain/1.0.0": {
+      "type": "project",
+      "path": "../YesLocation.Domain/YesLocation.Domain.csproj",
+      "msbuildProject": "../YesLocation.Domain/YesLocation.Domain.csproj"
+    },
+    "YesLocation.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../YesLocation.Infrastructure/YesLocation.Infrastructure.csproj",
+      "msbuildProject": "../YesLocation.Infrastructure/YesLocation.Infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.2",
       "Microsoft.AspNetCore.OpenApi >= 8.0.2",
-      "Microsoft.EntityFrameworkCore >= 8.0.2",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.2",
-      "Pomelo.EntityFrameworkCore.MySql >= 8.0.1",
       "Swashbuckle.AspNetCore >= 6.4.0",
-      "itext7 >= 8.0.2",
-      "itext7.pdfhtml >= 5.0.2"
+      "YesLocation.Application >= 1.0.0",
+      "YesLocation.Infrastructure >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -6860,7 +6913,14 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "E:\\Dev\\crm_yes_location\\src\\YesLocation.Application\\YesLocation.Application.csproj": {
+              "projectPath": "E:\\Dev\\crm_yes_location\\src\\YesLocation.Application\\YesLocation.Application.csproj"
+            },
+            "E:\\Dev\\crm_yes_location\\src\\YesLocation.Infrastructure\\YesLocation.Infrastructure.csproj": {
+              "projectPath": "E:\\Dev\\crm_yes_location\\src\\YesLocation.Infrastructure\\YesLocation.Infrastructure.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -6886,31 +6946,15 @@
             "target": "Package",
             "version": "[8.0.2, )"
           },
-          "Microsoft.EntityFrameworkCore": {
-            "target": "Package",
-            "version": "[8.0.2, )"
-          },
           "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",
             "version": "[8.0.2, )"
           },
-          "Pomelo.EntityFrameworkCore.MySql": {
-            "target": "Package",
-            "version": "[8.0.1, )"
-          },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.4.0, )"
-          },
-          "itext7": {
-            "target": "Package",
-            "version": "[8.0.2, )"
-          },
-          "itext7.pdfhtml": {
-            "target": "Package",
-            "version": "[5.0.2, )"
           }
         },
         "imports": [
