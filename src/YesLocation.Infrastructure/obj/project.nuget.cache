@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "R9amXKtS8YrvKEoD/DRXPi+eDO73VCn4DTFVCB2xiI/zgbsByGsGsEnoLQ7qvWyyZQvePNI6HPQtMbreATj9wg==",
+  "dgSpecHash": "WxbV3DYSq6fuORrdxEMSvlceVTvG/MZ6ZpYvP2Nx8yLBALyXV2TR+xl54/WC6Go8dw1Y2C8GoUIH3zRY3ECeuQ==",
   "success": true,
   "projectFilePath": "E:\\Dev\\crm_yes_location\\src\\YesLocation.Infrastructure\\YesLocation.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -28,7 +28,7 @@
     "C:\\Users\\rebeb\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
     "C:\\Users\\rebeb\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\rebeb\\.nuget\\packages\\mysqlconnector\\2.3.5\\mysqlconnector.2.3.5.nupkg.sha512",
-    "C:\\Users\\rebeb\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\8.0.1\\pomelo.entityframeworkcore.mysql.8.0.1.nupkg.sha512",
+    "C:\\Users\\rebeb\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\8.0.2\\pomelo.entityframeworkcore.mysql.8.0.2.nupkg.sha512",
     "C:\\Users\\rebeb\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\rebeb\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
     "C:\\Users\\rebeb\\.nuget\\packages\\system.composition\\6.0.0\\system.composition.6.0.0.nupkg.sha512",

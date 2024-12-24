@@ -9,7 +9,7 @@ public class PasswordComplexityAttribute : ValidationAttribute
   {
     if (value == null)
     {
-      return new ValidationResult("Le mot de passe est requis.");
+      return new ValidationResult("The password is required.");
     }
 
     var password = value.ToString()!;
@@ -18,7 +18,7 @@ public class PasswordComplexityAttribute : ValidationAttribute
         !Regex.IsMatch(password, @"[a-z]+") ||
         !Regex.IsMatch(password, @"[0-9]+"))
     {
-      return new ValidationResult("Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule et un chiffre.");
+      return new ValidationResult("The password must contain at least one upper case letter, one lower case letter and one number.");
     }
 
     return ValidationResult.Success!;

@@ -19,9 +19,10 @@ public class AuthController : ControllerBase
 
   private readonly YesLocationDbContext _ctx;
   private readonly AuthService _authService;
-  public AuthController(IConfiguration configuration, IEnvironmentService env)
+
+  public AuthController(YesLocationDbContext context, IConfiguration configuration, IEnvironmentService env)
   {
-    _ctx = new YesLocationDbContext(configuration, env);
+    _ctx = context;
     _authService = new AuthService(configuration);
   }
 
@@ -32,7 +33,7 @@ public class AuthController : ControllerBase
     if (!ModelState.IsValid)
       return BadRequest(ModelState);
 
-    int existingUser = await _ctx.Auth
+    int existingUser = await _ctx!.Auth
       .Where(q => q.Email == user.Email || q.Username == user.Username)
       .CountAsync();
 
@@ -44,7 +45,7 @@ public class AuthController : ControllerBase
       rng.GetNonZeroBytes(passwordSalt);
     }
 
-    byte[] passwordHash = _authService.GetPasswordHash(user.Password, passwordSalt);
+    byte[] passwordHash = _authService!.GetPasswordHash(user.Password, passwordSalt);
 
     Auth auth = new()
     {
@@ -78,18 +79,16 @@ public class AuthController : ControllerBase
   [HttpPost("Login")]
   public async Task<IActionResult> Login(UserLoginDto userLoginDto)
   {
-    Auth? auth = await _ctx.Auth.FirstOrDefaultAsync(q => q.Username == userLoginDto.UsernameOrEmail || q.Email == userLoginDto.UsernameOrEmail);
+    Auth? auth = await _ctx!.Auth.FirstOrDefaultAsync(q => q.Username == userLoginDto.UsernameOrEmail || q.Email == userLoginDto.UsernameOrEmail);
 
     if (auth == null) return Unauthorized("Invalid username or email");
 
     if (auth.PasswordHash == null || auth.PasswordSalt == null) return Unauthorized("Invalid password");
 
-    byte[] passwordHash = _authService.GetPasswordHash(userLoginDto.Password, auth.PasswordSalt);
+    byte[] passwordHash = _authService!.GetPasswordHash(userLoginDto.Password, auth.PasswordSalt);
 
-    for (int i = 0; i < passwordHash.Length; i++)
-    {
-      if (passwordHash[i] != auth.PasswordHash[i]) return Unauthorized("Invalid password");
-    }
+    if (!_authService.VerifyPassword(auth.PasswordHash, passwordHash))
+      return Unauthorized("Invalid password");
 
     User? user = await _ctx.Users.FirstOrDefaultAsync(q => q.Username == userLoginDto.UsernameOrEmail || q.Email == userLoginDto.UsernameOrEmail);
 
@@ -101,7 +100,7 @@ public class AuthController : ControllerBase
       Email = user.Email,
       FirstName = user.FirstName,
       LastName = user.LastName,
-      Token = _authService.CreateToken(user.Id)
+      Token = _authService.CreateToken(user)
     };
 
     return Ok(userLogged);
@@ -114,6 +113,8 @@ public class AuthController : ControllerBase
 
     int userId = int.Parse(claim.Value);
 
-    return _authService.CreateToken(userId);
+    User? user = _ctx.Users.Find(userId) ?? throw new UnauthorizedAccessException("Unable to refresh the token.");
+
+    return _authService!.CreateToken(user);
   }
 }

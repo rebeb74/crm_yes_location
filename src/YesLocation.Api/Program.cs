@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using YesLocation.Api.Middlewares;
 using YesLocation.Api.Services;
 using YesLocation.Domain.Interfaces;
 
@@ -33,6 +34,7 @@ builder.Services.AddCors((options) =>
 string? tokenKeyString = builder.Configuration.GetSection("AppSettings:TokenKey").Value;
 
 builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(option =>
@@ -67,6 +69,8 @@ else
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<CurrentUserMiddleware>();
 
 app.MapControllers();
 
