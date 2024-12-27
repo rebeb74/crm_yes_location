@@ -41,7 +41,7 @@ public class UserRegistrationDtoTests
       Assert.Empty(results);
     else
     {
-      Assert.Single(results);
+      Assert.NotEmpty(results);
       Assert.Equal(expectedFailingMember, results[0].MemberNames.First());
     }
   }

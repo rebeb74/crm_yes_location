@@ -6,7 +6,7 @@ namespace YesLocation.Application.DTOs
   public partial class UserRegistrationDto
   {
     private string? _username;
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Le nom d'utilisateur est requis.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "The user name is required.")]
     [StringLength(50, MinimumLength = 3)]
     public string? Username
     {
@@ -18,8 +18,8 @@ namespace YesLocation.Application.DTOs
     }
 
     private string? _Email;
-    [Required(AllowEmptyStrings = false, ErrorMessage = "L'adresse email est requise.")]
-    [EmailAddress(ErrorMessage = "L'adresse email n'est pas valide.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "An email address is required.")]
+    [EmailAddress(ErrorMessage = "The email address is invalid.")]
     [StringLength(50, MinimumLength = 6)]
     public string? Email
     {
@@ -30,16 +30,16 @@ namespace YesLocation.Application.DTOs
       }
     }
 
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Le mot de passe est requis.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "The password is required.")]
     [PasswordComplexity]
     public string Password { get; set; } = "";
 
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Le mot de passe de confirmation est requis.")]
-    [Compare("Password", ErrorMessage = "Les mots de passe ne correspondent pas.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "The confirmation password is required.")]
+    [Compare("Password", ErrorMessage = "The passwords do not match.")]
     public string PasswordConfirm { get; set; } = "";
 
     private string _FirstName = "";
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Le prénom est requis.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "The first name is required.")]
     [StringLength(50, MinimumLength = 3)]
     public string FirstName
     {
@@ -51,7 +51,7 @@ namespace YesLocation.Application.DTOs
     }
 
     private string _LastName = "";
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Le nom de famille est requis.")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "The lastname is required.")]
     [StringLength(50, MinimumLength = 3)]
     public string LastName
     {
