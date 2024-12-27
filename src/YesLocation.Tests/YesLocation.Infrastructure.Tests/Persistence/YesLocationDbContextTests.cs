@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using YesLocation.Domain.Entities;
 using YesLocation.Domain.Interfaces;
@@ -8,8 +9,9 @@ namespace YesLocation.Tests.YesLocation.Infrastructure.Tests.Persistence;
 
 public class YesLocationDbContextTests
 {
-  private readonly DbContextOptions<YesLocationDbContext> _contextOptions;
   private readonly Mock<ICurrentUserService> _mockCurrentUserService;
+  private readonly DbContextOptions<YesLocationDbContext> _contextOptions;
+
   public YesLocationDbContextTests()
   {
     _contextOptions = new DbContextOptionsBuilder<YesLocationDbContext>()
@@ -28,7 +30,9 @@ public class YesLocationDbContextTests
   public void DbContext_InitializesDbSets()
   {
     // Act
-    using var context = new YesLocationDbContext(_contextOptions, _mockCurrentUserService.Object);
+    using var context = new YesLocationDbContext(
+        _contextOptions,
+        _mockCurrentUserService.Object);
 
     // Assert
     Assert.NotNull(context.Users);
@@ -39,7 +43,9 @@ public class YesLocationDbContextTests
   public async Task SaveChanges_SetsCreatedAtAndUpdatedAt_ForNewEntity()
   {
     // Arrange
-    using var context = new YesLocationDbContext(_contextOptions, _mockCurrentUserService.Object);
+    using var context = new YesLocationDbContext(
+        _contextOptions,
+        _mockCurrentUserService.Object);
     var user = new User { Username = "newUserTest", Email = "newUserTest@example.com" };
 
     // Act
@@ -57,7 +63,9 @@ public class YesLocationDbContextTests
   public async Task SaveChanges_UpdatesModificationFields_ForModifiedEntity()
   {
     // Arrange
-    using var context = new YesLocationDbContext(_contextOptions, _mockCurrentUserService.Object);
+    using var context = new YesLocationDbContext(
+        _contextOptions,
+        _mockCurrentUserService.Object);
     var user = new User { Username = "updatedUserTest", Email = "updatedUserTest@example.com" };
     context.Users.Add(user);
     await context.SaveChangesAsync();
@@ -83,7 +91,9 @@ public class YesLocationDbContextTests
   public void ModelCreating_ConfiguresUserEntity()
   {
     // Act
-    using var context = new YesLocationDbContext(_contextOptions, _mockCurrentUserService.Object);
+    using var context = new YesLocationDbContext(
+        _contextOptions,
+        _mockCurrentUserService.Object);
     var userEntity = context.Model.FindEntityType(typeof(User));
 
     // Assert

@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YesLocation.Api.Controllers;
-using YesLocation.Domain.Entities;
-using YesLocation.Domain.Interfaces;
 using YesLocation.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Moq;
+using YesLocation.Domain.Interfaces;
+using YesLocation.Domain.Entities;
 
 namespace YesLocation.Tests.YesLocation.Api.Tests.Controllers;
 
@@ -12,17 +13,18 @@ public class UserControllerTests : IDisposable
 {
   private readonly YesLocationDbContext _context;
   private readonly UserController _controller;
-  private readonly DbContextOptions<YesLocationDbContext> _options;
+  private readonly DbContextOptions<YesLocationDbContext> _contextOptions;
 
   public UserControllerTests()
   {
-    // Configuration de la base de données InMemory
-    _options = new DbContextOptionsBuilder<YesLocationDbContext>()
-        .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-        .Options;
+    // Configuration des mocks
+    _contextOptions = new DbContextOptionsBuilder<YesLocationDbContext>()
+    .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+    .Options;
 
-    // Création du contexte avec la base InMemory
-    _context = new YesLocationDbContext(_options, Mock.Of<ICurrentUserService>());
+    var mockCurrentUserService = new Mock<ICurrentUserService>();
+
+    _context = new YesLocationDbContext(_contextOptions, mockCurrentUserService.Object);
 
     // Ajout des données de test
     _context.Users.AddRange(new List<User>

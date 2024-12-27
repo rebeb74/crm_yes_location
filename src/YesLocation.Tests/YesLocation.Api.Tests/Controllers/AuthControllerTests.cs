@@ -12,30 +12,29 @@ public class AuthControllerTests
 {
   private readonly YesLocationDbContext _context;
   private readonly AuthController _controller;
-  private readonly Mock<IConfiguration> _configurationMock;
-  private readonly Mock<IEnvironmentService> _environmentServiceMock;
+  private readonly DbContextOptions<YesLocationDbContext> _contextOptions;
 
   public AuthControllerTests()
   {
-    var options = new DbContextOptionsBuilder<YesLocationDbContext>()
+    // Configuration des mocks
+    _contextOptions = new DbContextOptionsBuilder<YesLocationDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
         .Options;
+
     var mockCurrentUserService = new Mock<ICurrentUserService>();
-    _context = new YesLocationDbContext(options, mockCurrentUserService.Object);
 
-    // Configuration des mocks
-    _configurationMock = new Mock<IConfiguration>();
-    _environmentServiceMock = new Mock<IEnvironmentService>();
-
+    Mock<IConfiguration> configurationMock = new();
     var configurationSection = new Mock<IConfigurationSection>();
     configurationSection.Setup(x => x.Value).Returns("test-key");
-    _configurationMock.Setup(x => x.GetSection("AppSettings:TokenKey"))
+    configurationMock.Setup(x => x.GetSection("AppSettings:TokenKey"))
                      .Returns(configurationSection.Object);
-    _configurationMock.Setup(x => x.GetSection("AppSettings:PasswordKey"))
+    configurationMock.Setup(x => x.GetSection("AppSettings:PasswordKey"))
                      .Returns(configurationSection.Object);
 
+    _context = new YesLocationDbContext(_contextOptions, mockCurrentUserService.Object);
+
     // Création du controller avec le DbContext injecté
-    _controller = new AuthController(_context, _configurationMock.Object, _environmentServiceMock.Object);
+    _controller = new AuthController(_context, configurationMock.Object);
   }
 
   [Fact]

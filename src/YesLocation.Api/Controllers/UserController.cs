@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,15 @@ namespace YesLocation.Api.Controllers;
 public class UserController : ControllerBase
 {
   private readonly YesLocationDbContext _context;
+  IMapper _mapper;
 
   public UserController(YesLocationDbContext context)
   {
     _context = context;
+    _mapper = new Mapper(new MapperConfiguration(cfg =>
+    {
+      cfg.CreateMap<User, User>();
+    }));
   }
 
   // GET: api/User
@@ -41,25 +47,16 @@ public class UserController : ControllerBase
 
   // PUT: api/User/5
   [HttpPut("{id}")]
-  public async Task<ActionResult<User>> PutUser(int id, User user)
+  public async Task<ActionResult<User>> PutUser(int id, User userInput)
   {
-    if (id != user.Id)
+    var user = await _context.Users.FindAsync(id);
+    if (user == null)
     {
-      return BadRequest();
+      return NotFound();
     }
 
-    try
-    {
-      await _context.SaveChangesAsync();
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-      if (!UserExists(id))
-      {
-        return NotFound();
-      }
-      throw;
-    }
+    _mapper.Map(userInput, user);
+    await _context.SaveChangesAsync();
 
     return await GetUser(id);
   }

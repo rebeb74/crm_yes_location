@@ -20,7 +20,7 @@ public class AuthController : ControllerBase
   private readonly YesLocationDbContext _ctx;
   private readonly AuthService _authService;
 
-  public AuthController(YesLocationDbContext context, IConfiguration configuration, IEnvironmentService env)
+  public AuthController(YesLocationDbContext context, IConfiguration configuration)
   {
     _ctx = context;
     _authService = new AuthService(configuration);
