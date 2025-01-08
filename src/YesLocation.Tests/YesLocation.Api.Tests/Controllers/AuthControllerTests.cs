@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using YesLocation.Domain.Interfaces;
+using YesLocation.Application.DTOs.User;
 
 namespace YesLocation.Tests.YesLocation.Api.Tests.Controllers;
 public class AuthControllerTests
@@ -26,9 +27,9 @@ public class AuthControllerTests
     Mock<IConfiguration> configurationMock = new();
     var configurationSection = new Mock<IConfigurationSection>();
     configurationSection.Setup(x => x.Value).Returns("test-key");
-    configurationMock.Setup(x => x.GetSection("AppSettings:TokenKey"))
+    configurationMock.Setup(x => x.GetSection("Jwt:TokenKey"))
                      .Returns(configurationSection.Object);
-    configurationMock.Setup(x => x.GetSection("AppSettings:PasswordKey"))
+    configurationMock.Setup(x => x.GetSection("Jwt:PasswordKey"))
                      .Returns(configurationSection.Object);
 
     _context = new YesLocationDbContext(_contextOptions, mockCurrentUserService.Object);
@@ -62,8 +63,8 @@ public class AuthControllerTests
 
     var auth = await _context.Auth.FirstAsync();
     Assert.NotNull(auth);
-    Assert.Equal(char.ToUpper(userDto.Username[0]) + userDto.Username[1..], auth.Username);
-    Assert.Equal(userDto.Email, auth.Email);
+    Assert.Equal(char.ToUpper(userDto.Username[0]) + userDto.Username[1..], auth.User.Username);
+    Assert.Equal(userDto.Email, auth.User.Email);
     Assert.NotNull(auth.PasswordHash);
     Assert.NotNull(auth.PasswordSalt);
 

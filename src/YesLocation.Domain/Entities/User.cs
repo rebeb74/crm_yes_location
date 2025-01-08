@@ -1,4 +1,3 @@
-
 namespace YesLocation.Domain.Entities;
 
 public class User : BaseModel
@@ -26,4 +25,6 @@ public class User : BaseModel
   }
   public string? FirstName { get; set; }
   public string? LastName { get; set; }
+  public virtual ICollection<UserRole> UserRoles { get; set; } = [];
+  public virtual Auth? Auth { get; set; }
 }

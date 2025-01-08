@@ -7,14 +7,13 @@ using YesLocation.Api.Middlewares;
 using YesLocation.Api.Services;
 using YesLocation.Domain.Interfaces;
 using YesLocation.Infrastructure.Persistence;
+using YesLocation.Infrastructure.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors((options) =>
     {
@@ -34,11 +33,22 @@ builder.Services.AddCors((options) =>
         });
     });
 
-string? tokenKeyString = builder.Configuration.GetSection("AppSettings:TokenKey").Value;
+string? tokenKeyString = builder.Configuration["Jwt:TokenKey"];
+string? issuerString = builder.Configuration["Jwt:Issuer"];
+string? audienceString = builder.Configuration["Jwt:Audience"];
 
+// Vérifiez que les paramètres ne sont pas vides
+if (string.IsNullOrEmpty(tokenKeyString) || string.IsNullOrEmpty(issuerString) || string.IsNullOrEmpty(audienceString))
+{
+    throw new Exception("Les paramètres JWT (Issuer, Audience, TokenKey) ne sont pas correctement configurés dans appsettings.json.");
+}
+
+// Enregistrement des services
 builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
+// Configuration du DbContext avec MySQL
 builder.Services.AddDbContext<YesLocationDbContext>((serviceProvider, options) =>
 {
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
@@ -62,17 +72,27 @@ builder.Services.AddDbContext<YesLocationDbContext>((serviceProvider, options) =
     }
 });
 
+// Configuration de l'authentification JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(option =>
     {
         option.TokenValidationParameters = new TokenValidationParameters()
         {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+            ValidIssuer = issuerString,
+            ValidAudience = audienceString,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKeyString ?? "")),
-            ValidateIssuer = false,
-            ValidateAudience = false
         };
     });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy =>
+        policy.RequireRole("Admin"));
+});
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -105,7 +125,18 @@ builder.Services.AddSwaggerGen(options =>
 });
 });
 
+// Ajout des contrôleurs
+builder.Services.AddControllers();
+
+// Créer l'application
 var app = builder.Build();
+
+// Exécuter le seeding au démarrage
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await DatabaseSeeder.SeedAsync(services);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

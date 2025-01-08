@@ -27,18 +27,6 @@ namespace YesLocation.Infrastructure.Configurations
       builder.Property(e => e.Email)
           .HasMaxLength(50)
           .IsRequired();
-
-      builder.HasData(
-              new User
-              {
-                Id = 1,
-                Username = "admin",
-                FirstName = "Admin",
-                LastName = "Admin",
-                Email = "bertrandpetit10@gmail.com",
-              }
-
-          );
     }
   }
 }

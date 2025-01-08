@@ -1,6 +1,9 @@
+using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Configuration;
 using YesLocation.Domain.Entities;
+using YesLocation.Domain.Interfaces;
 
 namespace YesLocation.Infrastructure.Configurations
 {
@@ -8,19 +11,6 @@ namespace YesLocation.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Auth> builder)
         {
-
-            builder.HasIndex(e => e.Username)
-                .IsUnique();
-            builder.Property(e => e.Username)
-                .HasMaxLength(50)
-                .IsRequired();
-
-            builder.HasIndex(e => e.Email)
-                .IsUnique();
-            builder.Property(e => e.Email)
-                .HasMaxLength(50)
-                .IsRequired();
-
             builder.Property(e => e.PasswordHash)
                 .HasColumnType("tinyblob")
                 .IsRequired();
@@ -28,6 +18,11 @@ namespace YesLocation.Infrastructure.Configurations
             builder.Property(e => e.PasswordSalt)
                 .HasColumnType("tinyblob")
                 .IsRequired();
+
+            builder.HasOne(a => a.User)
+                .WithOne(u => u.Auth)
+                .HasForeignKey<Auth>(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

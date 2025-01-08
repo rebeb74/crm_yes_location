@@ -1,0 +1,25 @@
+// Créer une migration
+dotnet ef migrations add InitialCreate -p src/YesLocation.Infrastructure -s src/YesLocation.Api
+
+// Appliquer la migration
+dotnet ef database update -p src/YesLocation.Infrastructure -s src/YesLocation.Api
+
+// Supprimer la migration
+dotnet ef migrations remove -p src/YesLocation.Infrastructure -s src/YesLocation.Api
+
+// Rollback migration (0 = nombre de migration à rollback)
+dotnet ef database update 0 -p src/YesLocation.Infrastructure -s src/YesLocation.Api
+
+
+// Supprimer la db et relancer les migrations 
+# 1. Supprimer les migrations de la DB
+dotnet ef database update 0
+
+# 2. Supprimer le dossier Migrations
+rm -r src/YesLocation.Infrastructure/Migrations
+
+# 3. Créer une nouvelle migration initiale
+dotnet ef migrations add InitialCreate --project src/YesLocation.Infrastructure --startup-project src/YesLocation.Api
+
+# 4. Appliquer la migration
+dotnet ef database update --project src/YesLocation.Infrastructure --startup-project src/YesLocation.Api

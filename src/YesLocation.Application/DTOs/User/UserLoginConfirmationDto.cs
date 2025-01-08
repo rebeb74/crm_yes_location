@@ -1,4 +1,4 @@
-namespace YesLocation.Application.DTOs
+namespace YesLocation.Application.DTOs.User
 {
   public partial class UserLoginConfirmationDto
   {

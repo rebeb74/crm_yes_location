@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.IdentityModel.Tokens;
@@ -38,17 +39,21 @@ public class AuthService(IConfiguration configuration) : IAuthService
 
   public string CreateToken(User user)
   {
-    Claim[] claims = [
+    List<Claim> claims = [
             new Claim("userId", user.Id.ToString()),
             new Claim("username", user.Username ?? ""),
             new Claim("email", user.Email ?? ""),
             new Claim("firstName", user.FirstName ?? ""),
-            new Claim("lastName", user.LastName ?? ""),
-    ];
+            new Claim("lastName", user.LastName ?? "")
+        ];
 
-    string? tokenKeyString = _configuration.GetSection("AppSettings:TokenKey").Value;
+    foreach (var userRole in user.UserRoles)
+    {
+      claims.Add(new Claim(ClaimTypes.Role, userRole.Role.Name));
+    }
 
-    SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(tokenKeyString ?? ""));
+    string tokenKeyString = _configuration["Jwt:TokenKey"] ?? "";
+    SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(tokenKeyString));
 
     SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha512Signature);
 
@@ -56,7 +61,9 @@ public class AuthService(IConfiguration configuration) : IAuthService
     {
       Subject = new ClaimsIdentity(claims),
       Expires = DateTime.Now.AddDays(1),
-      SigningCredentials = creds
+      SigningCredentials = creds,
+      Issuer = _configuration["Jwt:Issuer"],
+      Audience = _configuration["Jwt:Audience"]
     };
 
     JwtSecurityTokenHandler tokenHandler = new();
@@ -78,5 +85,16 @@ public class AuthService(IConfiguration configuration) : IAuthService
     {
       return false;
     }
+  }
+
+  public byte[] GetPasswordSalt()
+  {
+    byte[] passwordSalt = [128 / 8];
+    using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+    {
+      rng.GetNonZeroBytes(passwordSalt);
+    }
+
+    return passwordSalt;
   }
 }

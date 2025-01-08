@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using YesLocation.Application.Attributes;
 
-namespace YesLocation.Application.DTOs
+namespace YesLocation.Application.DTOs.User
 {
   public partial class UserRegistrationDto
   {
