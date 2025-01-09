@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Xunit.Sdk;
 using YesLocation.Application.DTOs;
+using YesLocation.Application.DTOs.User;
 
 namespace YesLocation.Tests.YesLocation.Application.Tests.DTOs;
 public class UserRegistrationDtoTests

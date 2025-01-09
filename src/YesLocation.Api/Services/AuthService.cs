@@ -9,13 +9,23 @@ using YesLocation.Domain.Entities;
 using YesLocation.Domain.Interfaces;
 
 namespace YesLocation.Api.Services;
+
+/// <summary>
+/// Service handling authentication-related operations including password hashing, verification, and JWT token generation
+/// </summary>
 public class AuthService(IConfiguration configuration) : IAuthService
 {
   private readonly IConfiguration _configuration = configuration;
 
+  /// <summary>
+  /// Generates a password hash using PBKDF2 algorithm
+  /// </summary>
+  /// <param name="password">The plain text password to hash</param>
+  /// <param name="passwordSalt">The salt to use in the hashing process</param>
+  /// <returns>The hashed password as a byte array</returns>
   public byte[] GetPasswordHash(string password, byte[] passwordSalt)
   {
-    string passwordSaltPlusString = _configuration.GetSection("AppSettings:PasswordKey").Value +
+    string passwordSaltPlusString = _configuration.GetSection("Jwt:PasswordKey").Value +
         Convert.ToBase64String(passwordSalt);
 
     return KeyDerivation.Pbkdf2(
@@ -27,6 +37,12 @@ public class AuthService(IConfiguration configuration) : IAuthService
     );
   }
 
+  /// <summary>
+  /// Verifies if a password hash matches the stored hash
+  /// </summary>
+  /// <param name="passwordHashDb">The stored password hash from the database</param>
+  /// <param name="passwordHash">The password hash to verify</param>
+  /// <returns>True if the hashes match, false otherwise</returns>
   public bool VerifyPassword(byte[] passwordHashDb, byte[] passwordHash)
   {
     for (int i = 0; i < passwordHash.Length; i++)
@@ -37,6 +53,12 @@ public class AuthService(IConfiguration configuration) : IAuthService
     return true;
   }
 
+  /// <summary>
+  /// Creates a JWT token for a user with their claims
+  /// </summary>
+  /// <param name="user">The user for whom to create the token</param>
+  /// <returns>A JWT token string</returns>
+  /// <exception cref="ArgumentException">Thrown when JWT TokenKey is missing in configuration</exception>
   public string CreateToken(User user)
   {
     List<Claim> claims = [
@@ -53,6 +75,10 @@ public class AuthService(IConfiguration configuration) : IAuthService
     }
 
     string tokenKeyString = _configuration["Jwt:TokenKey"] ?? "";
+    if (string.IsNullOrEmpty(tokenKeyString))
+    {
+      throw new ArgumentException("JWT TokenKey est manquant dans la configuration.");
+    }
     SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(tokenKeyString));
 
     SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha512Signature);
@@ -73,6 +99,11 @@ public class AuthService(IConfiguration configuration) : IAuthService
     return tokenHandler.WriteToken(token);
   }
 
+  /// <summary>
+  /// Validates an email address format
+  /// </summary>
+  /// <param name="email">The email address to validate</param>
+  /// <returns>True if the email format is valid, false otherwise</returns>
   public bool ValidateEmail(string email)
   {
     if (string.IsNullOrWhiteSpace(email)) return false;
@@ -87,6 +118,10 @@ public class AuthService(IConfiguration configuration) : IAuthService
     }
   }
 
+  /// <summary>
+  /// Generates a random password salt
+  /// </summary>
+  /// <returns>A byte array containing the generated salt</returns>
   public byte[] GetPasswordSalt()
   {
     byte[] passwordSalt = [128 / 8];

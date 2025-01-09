@@ -6,42 +6,17 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using YesLocation.Domain.Interfaces;
 using YesLocation.Domain.Entities;
+using YesLocation.Tests.Common;
 
 namespace YesLocation.Tests.YesLocation.Api.Tests.Controllers;
 
-public class UserControllerTests : IDisposable
+public class UserControllerTests : SeededContextTestBase
 {
-  private readonly YesLocationDbContext _context;
   private readonly UserController _controller;
-  private readonly DbContextOptions<YesLocationDbContext> _contextOptions;
 
   public UserControllerTests()
   {
-    // Configuration des mocks
-    _contextOptions = new DbContextOptionsBuilder<YesLocationDbContext>()
-    .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-    .Options;
-
-    var mockCurrentUserService = new Mock<ICurrentUserService>();
-
-    _context = new YesLocationDbContext(_contextOptions, mockCurrentUserService.Object);
-
-    // Ajout des données de test
-    _context.Users.AddRange(new List<User>
-        {
-            new() { Id = 1, Username = "user1", Email = "user1@test.com", FirstName = "User", LastName = "One" },
-            new() { Id = 2, Username = "user2", Email = "user2@test.com", FirstName = "User", LastName = "Two" }
-        });
-    _context.SaveChanges();
-
-    // Création du controller avec le contexte InMemory
     _controller = new UserController(_context);
-  }
-
-  public void Dispose()
-  {
-    _context.Database.EnsureDeleted();
-    _context.Dispose();
   }
 
   [Fact]
@@ -53,7 +28,7 @@ public class UserControllerTests : IDisposable
     // Assert
     var actionResult = Assert.IsType<ActionResult<IEnumerable<User>>>(result);
     var users = Assert.IsType<List<User>>(actionResult.Value);
-    Assert.Equal(2, users.Count);
+    Assert.Equal(3, users.Count);
   }
 
   [Fact]

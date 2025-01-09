@@ -18,7 +18,7 @@ public class AuthController(YesLocationDbContext context, IConfiguration configu
 {
 
   private readonly YesLocationDbContext _ctx = context;
-  private readonly AuthService _authService = new AuthService(configuration);
+  private readonly AuthService _authService = new(configuration);
 
   [AllowAnonymous]
   [HttpPost("Register")]

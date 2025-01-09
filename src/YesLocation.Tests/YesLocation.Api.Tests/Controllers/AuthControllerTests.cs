@@ -7,35 +7,16 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using YesLocation.Domain.Interfaces;
 using YesLocation.Application.DTOs.User;
+using YesLocation.Tests.Common;
 
 namespace YesLocation.Tests.YesLocation.Api.Tests.Controllers;
-public class AuthControllerTests
+public class AuthControllerTests : SeededContextTestBase
 {
-  private readonly YesLocationDbContext _context;
   private readonly AuthController _controller;
-  private readonly DbContextOptions<YesLocationDbContext> _contextOptions;
 
   public AuthControllerTests()
   {
-    // Configuration des mocks
-    _contextOptions = new DbContextOptionsBuilder<YesLocationDbContext>()
-        .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-        .Options;
-
-    var mockCurrentUserService = new Mock<ICurrentUserService>();
-
-    Mock<IConfiguration> configurationMock = new();
-    var configurationSection = new Mock<IConfigurationSection>();
-    configurationSection.Setup(x => x.Value).Returns("test-key");
-    configurationMock.Setup(x => x.GetSection("Jwt:TokenKey"))
-                     .Returns(configurationSection.Object);
-    configurationMock.Setup(x => x.GetSection("Jwt:PasswordKey"))
-                     .Returns(configurationSection.Object);
-
-    _context = new YesLocationDbContext(_contextOptions, mockCurrentUserService.Object);
-
-    // Création du controller avec le DbContext injecté
-    _controller = new AuthController(_context, configurationMock.Object);
+    _controller = new AuthController(_context, _configuration);
   }
 
   [Fact]
@@ -61,7 +42,7 @@ public class AuthControllerTests
     var authCount = await _context.Auth.CountAsync();
     Assert.Equal(1, authCount);
 
-    var auth = await _context.Auth.FirstAsync();
+    var auth = await _context.Auth.LastAsync();
     Assert.NotNull(auth);
     Assert.Equal(char.ToUpper(userDto.Username[0]) + userDto.Username[1..], auth.User.Username);
     Assert.Equal(userDto.Email, auth.User.Email);

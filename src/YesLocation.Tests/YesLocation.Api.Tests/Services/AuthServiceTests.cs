@@ -1,33 +1,22 @@
 using System.Security.Cryptography;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using YesLocation.Api.Services;
 using YesLocation.Domain.Entities;
 using YesLocation.Domain.Interfaces;
+using YesLocation.Infrastructure.Persistence;
+using YesLocation.Tests.Common;
 
 namespace YesLocation.Tests.YesLocation.Api.Tests.Services;
-public class AuthServiceTests
+public class AuthServiceTests : SeededContextTestBase
 {
-  private readonly IAuthService _authService;
-
-  private readonly Mock<IConfiguration> _configurationMock;
+  private readonly AuthService _authService;
 
   public AuthServiceTests()
   {
-    _configurationMock = new Mock<IConfiguration>();
-    var configurationSection = new Mock<IConfigurationSection>();
-    configurationSection.Setup(x => x.Value).Returns("une_cle_secrete_suffisamment_longue_pour_le_test_12345_une_cle_secrete_suffisamment_longue_pour_le_test_12345_une_cle_secrete_suffisamment_longue_pour_le_test_12345");
-
-    _configurationMock.Setup(x => x.GetSection("AppSettings:TokenKey"))
-                     .Returns(configurationSection.Object);
-    _configurationMock.Setup(x => x.GetSection("AppSettings:PasswordKey"))
-                     .Returns(configurationSection.Object);
-
-    _configurationMock.Setup(x => x["Jwt:Key"]).Returns("votre_clé_secrète_de_test_suffisamment_longue");
-    _configurationMock.Setup(x => x["Jwt:Issuer"]).Returns("test_issuer");
-    _configurationMock.Setup(x => x["Jwt:Audience"]).Returns("test_audience");
-
-    _authService = new AuthService(_configurationMock.Object);
+    _authService = new AuthService(_configuration);
   }
 
   [Fact]
@@ -95,11 +84,20 @@ public class AuthServiceTests
     // Arrange
     User user = new()
     {
-      Id = 1,
+      Id = 999,
       Username = "testUser",
       Email = "testuser@example.com",
       FirstName = "Test",
-      LastName = "User"
+      LastName = "User",
+      UserRoles = new List<UserRole>
+            {
+                new UserRole
+                {
+                    UserId = 999,
+                    RoleId = _context.Roles.First(r => r.Name == "User").Id,
+                    Role = _context.Roles.First(r => r.Name == "User")
+                }
+            }
     };
 
     // Act
@@ -108,6 +106,22 @@ public class AuthServiceTests
     // Assert
     Assert.NotNull(token);
     Assert.NotEmpty(token);
+
+    // Optionnel : Vérifier que le token peut être lu et contient les informations attendues
+    var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+    var jwtToken = tokenHandler.ReadJwtToken(token);
+
+    Assert.Equal("https://test-issuer.com", jwtToken.Issuer);
+    Assert.Contains("https://test-audience.com", jwtToken.Audiences);
+
+    // Vérifier que l'utilisateur a bien des rôles assignés
+    Assert.NotEmpty(user.UserRoles);
+    Assert.All(user.UserRoles, ur => Assert.NotNull(ur.Role));
+
+    // Vérifier la présence du claim "role"
+    var roleClaims = jwtToken.Claims.Where(c => c.Type == "role").ToList();
+    Assert.NotEmpty(roleClaims);
+    Assert.Contains(roleClaims, c => c.Value == "User");
   }
 
   [Theory]
