@@ -53,10 +53,10 @@ public class YesLocationDbContextTests
     await context.SaveChangesAsync();
 
     // Assert
-    Assert.NotEqual(DateTime.UtcNow, user.CreatedAt);
-    Assert.NotEqual(DateTime.UtcNow, user.UpdatedAt);
-    Assert.Equal(123, user.CreatedBy);
-    Assert.Equal(123, user.UpdatedBy);
+    Assert.NotEqual(default, user.CreatedAt);
+    Assert.NotEqual(default, user.UpdatedAt);
+    Assert.Equal(_mockCurrentUserService.Object.Id, user.CreatedBy);
+    Assert.Equal(_mockCurrentUserService.Object.Id, user.UpdatedBy);
   }
 
   [Fact]
@@ -72,19 +72,18 @@ public class YesLocationDbContextTests
 
     var initialCreatedAt = user.CreatedAt;
     var initialUpdatedAt = user.UpdatedAt;
+    var initialCreatedBy = user.CreatedBy;
 
     // Act
     user.Username = "Updated userName";
-    await Task.Delay(1000); // Attendre un peu pour voir la différence de timestamp
+    await Task.Delay(1000); // Wait a while to see the difference in timestamp
     await context.SaveChangesAsync();
-    User? updatedUser = await context.Users.FindAsync(user.Id);
 
     // Assert
-    Assert.NotNull(updatedUser);
-    Assert.Equal(initialCreatedAt, updatedUser.CreatedAt);
-    Assert.NotEqual(initialUpdatedAt, updatedUser.UpdatedAt);
-    Assert.Equal(123, updatedUser.UpdatedBy);
-    Assert.NotEqual("updatedUserTest", updatedUser.Username);
+    Assert.Equal(initialCreatedAt, user.CreatedAt);
+    Assert.NotEqual(initialUpdatedAt, user.UpdatedAt);
+    Assert.Equal(initialCreatedBy, user.CreatedBy);
+    Assert.Equal(_mockCurrentUserService.Object.Id, user.UpdatedBy);
   }
 
   [Fact]

@@ -1,7 +1,9 @@
 using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using YesLocation.Api.Mappings;
 using YesLocation.Domain.Interfaces;
 using YesLocation.Infrastructure.Persistence;
 
@@ -16,13 +18,22 @@ public abstract class ContextTestBase : IDisposable
   protected readonly YesLocationDbContext _context;
   protected readonly IConfiguration _configuration;
   protected readonly Mock<ICurrentUserService> _currentUserService;
+  protected readonly IMapper _mapper;
 
   protected ContextTestBase()
   {
     _configuration = CreateTestConfiguration();
     _currentUserService = CreateMockCurrentUserService();
     _context = CreateDbContext(Guid.NewGuid().ToString());
+    // Configuration du vrai AutoMapper
+    var config = new MapperConfiguration(cfg =>
+    {
+      cfg.AddProfile<MappingProfile>();
+    });
+
+    _mapper = config.CreateMapper();
   }
+
 
   /// <summary>
   /// Creates a test configuration with predefined JWT settings for testing purposes.

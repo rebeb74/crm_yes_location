@@ -1,6 +1,3 @@
-using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using YesLocation.Domain.Entities;
 using YesLocation.Infrastructure.Persistence;
 
@@ -33,10 +30,44 @@ namespace YesLocation.Tests.Common
           Username = $"user{i}",
           Email = $"user{i}@example.com",
           FirstName = $"First{i}",
-          LastName = $"Last{i}"
+          LastName = $"Last{i}",
         });
+
+        // Add UserRoles to the user 1
+        if (i == 1)
+        {
+          users[0].UserRoles = new List<UserRole>
+          {
+            new() { RoleId = 1 }, // User
+            new() { RoleId = 2 } // Admin
+          };
+
+        }
+
+        // Add UserRoles to the user 2
+        if (i == 2)
+        {
+          users[1].UserRoles = new List<UserRole>
+          {
+            new() { RoleId = 1 } // User
+          };
+
+        }
+
+        // Add UserRoles to the user 3
+        if (i == 3)
+        {
+          users[2].UserRoles = new List<UserRole>
+          {
+            new() { RoleId = 1 }, // User
+            new() { RoleId = 3 } // Manager
+          };
+        }
+
+
       }
       return users;
+
     }
 
     /// <summary>
@@ -59,16 +90,16 @@ namespace YesLocation.Tests.Common
     /// <param name="context">The database context to seed.</param>
     protected virtual void SeedDatabase(YesLocationDbContext context)
     {
-      if (!context.Users.Any())
-      {
-        var users = CreateSampleUsers();
-        context.Users.AddRange(users);
-      }
-
       if (!context.Roles.Any())
       {
         var roles = CreateSampleRoles();
         context.Roles.AddRange(roles);
+      }
+
+      if (!context.Users.Any())
+      {
+        var users = CreateSampleUsers();
+        context.Users.AddRange(users);
       }
       context.SaveChanges();
     }

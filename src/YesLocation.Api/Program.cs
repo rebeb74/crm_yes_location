@@ -94,6 +94,8 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("Admin"));
 });
 
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "YesLocation API", Version = "v1" });

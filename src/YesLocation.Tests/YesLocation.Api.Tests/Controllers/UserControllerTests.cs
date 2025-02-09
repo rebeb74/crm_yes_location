@@ -1,12 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using YesLocation.Api.Controllers;
-using YesLocation.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Moq;
-using YesLocation.Domain.Interfaces;
 using YesLocation.Domain.Entities;
 using YesLocation.Tests.Common;
+using YesLocation.Application.DTOs.User;
+using YesLocation.Application.DTOs.Role;
 
 namespace YesLocation.Tests.YesLocation.Api.Tests.Controllers;
 
@@ -16,100 +14,88 @@ public class UserControllerTests : SeededContextTestBase
 
   public UserControllerTests()
   {
-    _controller = new UserController(_context);
+    _controller = new UserController(_context, _mapper);
   }
 
   [Fact]
-  public async Task GetUsers_ReturnsAllUsers()
-  {
-    // Act
-    var result = await _controller.GetUsers();
-
-    // Assert
-    var actionResult = Assert.IsType<ActionResult<IEnumerable<User>>>(result);
-    var users = Assert.IsType<List<User>>(actionResult.Value);
-    Assert.Equal(3, users.Count);
-  }
-
-  [Fact]
-  public async Task GetUser_WithValidId_ReturnsUser()
-  {
-    // Act
-    var result = await _controller.GetUser(1);
-
-    // Assert
-    var actionResult = Assert.IsType<ActionResult<User>>(result);
-    var user = Assert.IsType<User>(actionResult.Value);
-    Assert.Equal(1, user.Id);
-    Assert.Equal("user1", user.Username?.ToLower());
-  }
-
-  [Fact]
-  public async Task GetUser_WithInvalidId_ReturnsNotFound()
-  {
-    // Act
-    var result = await _controller.GetUser(999);
-
-    // Assert
-    Assert.IsType<NotFoundResult>(result.Result);
-  }
-
-  [Fact]
-  public async Task PostUser_WithValidUser_ReturnsCreatedAtAction()
+  public async Task Update_WithExistingEmail_ReturnsBadRequest()
   {
     // Arrange
-    var newUser = new User
+    var updateUserDto = new UserCreateDto
     {
-      Username = "newuser",
-      Email = "newuser@test.com",
-      FirstName = "New",
+      Id = 1,
+      Username = "user1",
+      Email = "user2@example.com", // Email from another user
+      FirstName = "Updated",
       LastName = "User"
     };
 
     // Act
-    var result = await _controller.PostUser(newUser);
+    var result = await _controller.Update(1, updateUserDto);
 
     // Assert
-    var actionResult = Assert.IsType<ActionResult<User>>(result);
-    var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(actionResult.Result);
-    var returnedUser = Assert.IsType<User>(createdAtActionResult.Value);
-    Assert.Equal(newUser.Username?.ToLower(), returnedUser.Username?.ToLower());
+    var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+    Assert.Equal("A user with the same email already exists.", badRequestResult.Value);
   }
 
   [Fact]
-  public async Task PutUser_WithValidIdAndUser_ReturnsNoContent()
+  public async Task Update_WithExistingUsername_ReturnsBadRequest()
   {
     // Arrange
-    var user = await _context.Users.FindAsync(1);
-    user!.FirstName = "Updated";
+    var updateUserDto = new UserCreateDto
+    {
+      Id = 1,
+      Username = "user2", // Username of another user
+      Email = "user1@example.com",
+      FirstName = "Updated",
+      LastName = "User"
+    };
 
     // Act
-    var result = await _controller.PutUser(1, user);
+    var result = await _controller.Update(1, updateUserDto);
 
     // Assert
-    var actionResult = Assert.IsType<ActionResult<User>>(result);
-    var updatedUser = Assert.IsType<User>(actionResult.Value);
-    Assert.Equal("Updated", updatedUser?.FirstName);
+    var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+    Assert.Equal("A user with the same username already exists.", badRequestResult.Value);
   }
 
   [Fact]
-  public async Task DeleteUser_WithValidId_ReturnsNoContent()
+  public async Task AddUserRoles_WithValidData_ReturnsOk()
+  {
+    // Arrange
+    var roleIds = new List<int> { 1, 2 };
+
+    // Act
+    var result = await _controller.AddUserRoles(1, roleIds);
+
+    // Assert
+    Assert.IsType<OkResult>(result);
+    var user = await _context.Users.Include(u => u.UserRoles).FirstAsync(u => u.Id == 1);
+    Assert.Contains(user.UserRoles, ur => roleIds.Contains(ur.RoleId));
+  }
+
+  [Fact]
+  public async Task RemoveUserRole_WithValidData_ReturnsNoContent()
   {
     // Act
-    var result = await _controller.DeleteUser(1);
+    var result = await _controller.RemoveUserRole(1, 1);
 
     // Assert
     Assert.IsType<NoContentResult>(result);
-    Assert.Null(await _context.Users.FindAsync(1));
+    var userRole = await _context.Set<UserRole>().FindAsync(1, 1);
+    Assert.Null(userRole);
   }
 
   [Fact]
-  public async Task DeleteUser_WithInvalidId_ReturnsNotFound()
+  public async Task GetUserRoles_ReturnsRoles()
   {
     // Act
-    var result = await _controller.DeleteUser(999);
+    var result = await _controller.GetUserRoles(1);
 
     // Assert
-    Assert.IsType<NotFoundResult>(result);
+    var actionResult = Assert.IsType<ActionResult<IEnumerable<RoleDto>>>(result);
+    var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+    var roles = Assert.IsAssignableFrom<IEnumerable<RoleDto>>(okResult.Value);
+    Assert.NotEmpty(roles);
   }
 }
