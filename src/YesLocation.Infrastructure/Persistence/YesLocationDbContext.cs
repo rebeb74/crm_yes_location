@@ -10,15 +10,32 @@ public class YesLocationDbContext : DbContext
 {
     private readonly ICurrentUserService _currentUserService;
 
+    // Entités d'authentification et utilisateurs
     public virtual DbSet<User> Users { get; set; } = null!;
     public virtual DbSet<Auth> Auth { get; set; } = null!;
     public virtual DbSet<Role> Roles { get; set; } = null!;
     public virtual DbSet<UserRole> UserRoles { get; set; } = null!;
 
-    // Nouvelles entités pour le système de tarification
+    // Entités principales de gestion de location
+    public virtual DbSet<Booking> Bookings { get; set; } = null!;
+    public virtual DbSet<Vehicle> Vehicles { get; set; } = null!;
+    public virtual DbSet<Customer> Customers { get; set; } = null!;
+    public virtual DbSet<Location> Locations { get; set; } = null!;
+    public virtual DbSet<Quotation> Quotations { get; set; } = null!;
+    public virtual DbSet<Invoice> Invoices { get; set; } = null!;
+    public virtual DbSet<Payment> Payments { get; set; } = null!;
+    public virtual DbSet<MaintenanceRecord> MaintenanceRecords { get; set; } = null!;
+    public virtual DbSet<Agency> Agencies { get; set; } = null!;
+
+    // Entités pour le système de tarification
     public virtual DbSet<Season> Seasons { get; set; } = null!;
     public virtual DbSet<DurationTier> DurationTiers { get; set; } = null!;
     public virtual DbSet<VehiclePricing> VehiclePricings { get; set; } = null!;
+
+    // Entités pour le système d'état des lieux
+    public virtual DbSet<VehicleInspection> VehicleInspections { get; set; } = null!;
+    public virtual DbSet<VehicleIncident> VehicleIncidents { get; set; } = null!;
+    public virtual DbSet<VehicleIncidentPhoto> VehicleIncidentPhotos { get; set; } = null!;
 
     public YesLocationDbContext(DbContextOptions<YesLocationDbContext> options, ICurrentUserService currentUserService) : base(options)
     {

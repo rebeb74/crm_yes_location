@@ -23,4 +23,7 @@ public class Booking : BaseModel
   public virtual Quotation? Quotation { get; set; }
   public int? InvoiceId { get; set; }
   public virtual Invoice? Invoice { get; set; }
+
+  // Vehicle Inspections
+  public virtual ICollection<VehicleInspection> VehicleInspections { get; set; } = [];
 }

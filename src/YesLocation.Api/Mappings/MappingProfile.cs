@@ -15,6 +15,9 @@ using YesLocation.Application.DTOs.Season;
 using YesLocation.Application.DTOs.DurationTier;
 using YesLocation.Application.DTOs.VehiclePricing;
 using YesLocation.Application.DTOs.Agency;
+using YesLocation.Application.DTOs.VehicleInspection;
+using YesLocation.Application.DTOs.VehicleIncident;
+using YesLocation.Application.DTOs.VehicleIncidentPhoto;
 
 namespace YesLocation.Api.Mappings;
 
@@ -29,6 +32,7 @@ public class MappingProfile : Profile
       .ForMember(dest => dest.PickupLocation, opt => opt.Ignore())
       .ForMember(dest => dest.ReturnLocation, opt => opt.Ignore())
       .ForMember(dest => dest.Quotation, opt => opt.Ignore())
+      .ForMember(dest => dest.VehicleInspections, opt => opt.Ignore())
       .ForMember(dest => dest.Invoice, opt => opt.Ignore());
     CreateMap<Booking, BookingDto>();
 
@@ -111,5 +115,28 @@ public class MappingProfile : Profile
     // Agency mappings
     CreateMap<AgencyInputDto, Agency>();
     CreateMap<Agency, AgencyDto>();
+
+    // VehicleInspection mappings
+    CreateMap<VehicleInspectionInputDto, VehicleInspection>()
+      .ForMember(dest => dest.Booking, opt => opt.Ignore())
+      .ForMember(dest => dest.InspectedByUser, opt => opt.Ignore())
+      .ForMember(dest => dest.Incidents, opt => opt.Ignore());
+
+    CreateMap<VehicleInspection, VehicleInspectionDto>()
+      .ForMember(dest => dest.Incidents, opt => opt.MapFrom(src => src.Incidents));
+
+    // VehicleIncident mappings
+    CreateMap<VehicleIncidentInputDto, VehicleIncident>()
+      .ForMember(dest => dest.VehicleInspection, opt => opt.Ignore())
+      .ForMember(dest => dest.Photos, opt => opt.Ignore());
+
+    CreateMap<VehicleIncident, VehicleIncidentDto>()
+      .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos));
+
+    // VehicleIncidentPhoto mappings
+    CreateMap<VehicleIncidentPhotoInputDto, VehicleIncidentPhoto>()
+      .ForMember(dest => dest.VehicleIncident, opt => opt.Ignore());
+
+    CreateMap<VehicleIncidentPhoto, VehicleIncidentPhotoDto>();
   }
 }
