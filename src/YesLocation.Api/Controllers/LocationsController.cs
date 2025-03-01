@@ -5,7 +5,7 @@ using YesLocation.Infrastructure.Persistence;
 
 namespace YesLocation.Api.Controllers;
 
-public class LocationsController : BaseController<Location, CreateLocationDto, LocationDto>
+public class LocationsController : BaseController<Location, LocationInputDto, LocationDto>
 {
   public LocationsController(YesLocationDbContext context, IMapper mapper)
       : base(context, mapper)

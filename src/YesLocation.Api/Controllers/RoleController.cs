@@ -23,6 +23,7 @@ public class RoleController(YesLocationDbContext context) : ControllerBase
     {
       Id = r.Id,
       Name = r.Name,
+      Value = r.Value,
       Description = r.Description
     }));
   }
@@ -42,6 +43,7 @@ public class RoleController(YesLocationDbContext context) : ControllerBase
     {
       Id = role.Id,
       Name = role.Name,
+      Value = role.Value,
       Description = role.Description
     };
   }
@@ -64,6 +66,7 @@ public class RoleController(YesLocationDbContext context) : ControllerBase
     }
 
     role.Name = roleDto.Name;
+    role.Value = roleDto.Value;
     role.Description = roleDto.Description;
 
     try
@@ -95,6 +98,7 @@ public class RoleController(YesLocationDbContext context) : ControllerBase
     var role = new Role
     {
       Name = roleDto.Name,
+      Value = roleDto.Value,
       Description = roleDto.Description
     };
 

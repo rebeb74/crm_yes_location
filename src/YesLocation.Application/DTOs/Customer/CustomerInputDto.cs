@@ -1,11 +1,9 @@
 using YesLocation.Domain.Enums;
-using YesLocation.Domain.Interfaces;
-
+using YesLocation.Application.DTOs.Common;
 namespace YesLocation.Application.DTOs.Customer;
 
-public class CreateCustomerDto : IBaseDto
+public class CustomerInputDto : BaseInputModelDto
 {
-  public int? Id { get; set; }
   public string? FirstName { get; set; }
   public string? LastName { get; set; }
   public string? Email { get; set; }

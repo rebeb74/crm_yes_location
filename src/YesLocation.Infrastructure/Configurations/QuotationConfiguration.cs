@@ -8,6 +8,10 @@ namespace YesLocation.Infrastructure.Configurations
   {
     public void Configure(EntityTypeBuilder<Quotation> builder)
     {
+      builder.Property(q => q.Amount)
+          .HasPrecision(7, 2);
+
+      // Relationships
       builder.HasOne(q => q.Customer)
           .WithMany(c => c.Quotations)
           .HasForeignKey(q => q.CustomerId)
@@ -18,14 +22,10 @@ namespace YesLocation.Infrastructure.Configurations
           .HasForeignKey(q => q.VehicleId)
           .OnDelete(DeleteBehavior.Restrict);
 
-      // Configuration de la relation one-to-one avec Booking
       builder.HasOne(q => q.Booking)
           .WithOne(b => b.Quotation)
           .HasForeignKey<Booking>(b => b.QuotationId)
           .OnDelete(DeleteBehavior.Restrict);
-
-      builder.Property(q => q.Amount)
-          .HasPrecision(18, 2);
     }
   }
 }

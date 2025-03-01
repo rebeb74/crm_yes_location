@@ -5,7 +5,7 @@ using YesLocation.Infrastructure.Persistence;
 
 namespace YesLocation.Api.Controllers;
 
-public class PaymentsController : BaseController<Payment, CreatePaymentDto, CreatePaymentDto>
+public class PaymentsController : BaseController<Payment, PaymentInputDto, PaymentDto>
 {
   public PaymentsController(YesLocationDbContext context, IMapper mapper)
       : base(context, mapper)

@@ -1,11 +1,10 @@
-namespace YesLocation.Application.DTOs.Role
-{
-  public class RoleDto
-  {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public int Value { get; set; }
-  }
+using YesLocation.Application.DTOs.Common;
 
+namespace YesLocation.Application.DTOs.Role;
+
+public class RoleDto : BaseModelDto
+{
+  public required string Name { get; set; }
+  public required int Value { get; set; }
+  public string? Description { get; set; }
 }

@@ -21,7 +21,7 @@ public class UserControllerTests : SeededContextTestBase
   public async Task Update_WithExistingEmail_ReturnsBadRequest()
   {
     // Arrange
-    var updateUserDto = new UserCreateDto
+    var updateUserDto = new UserInputDto
     {
       Id = 1,
       Username = "user1",
@@ -42,7 +42,7 @@ public class UserControllerTests : SeededContextTestBase
   public async Task Update_WithExistingUsername_ReturnsBadRequest()
   {
     // Arrange
-    var updateUserDto = new UserCreateDto
+    var updateUserDto = new UserInputDto
     {
       Id = 1,
       Username = "user2", // Username of another user

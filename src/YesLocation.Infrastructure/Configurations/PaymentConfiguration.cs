@@ -14,7 +14,7 @@ namespace YesLocation.Infrastructure.Configurations
           .OnDelete(DeleteBehavior.Cascade);
 
       builder.Property(p => p.Amount)
-          .HasPrecision(18, 2);
+          .HasPrecision(7, 2);
 
       builder.Property(p => p.TransactionReference)
           .HasMaxLength(100);

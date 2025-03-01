@@ -1,11 +1,12 @@
+using YesLocation.Application.DTOs.Common;
+
 namespace YesLocation.Application.DTOs.Location;
 
-public class LocationDto
+public class LocationDto : BaseModelDto
 {
-  public int Id { get; set; }
-  public string Name { get; set; } = string.Empty;
-  public string Address { get; set; } = string.Empty;
-  public string Phone { get; set; } = string.Empty;
-  public DateTime CreatedAt { get; set; }
-  public DateTime? UpdatedAt { get; set; }
+  public string? Name { get; set; }
+  public string? Address { get; set; }
+  public string? City { get; set; }
+  public string? PostalCode { get; set; }
+  public bool IsActive { get; set; }
 }

@@ -47,7 +47,7 @@ public class BaseControllerTests : SeededContextTestBase
   public async Task Create_WithValidEntity_ReturnsCreatedAtAction()
   {
     // Arrange
-    var newUserDto = new UserCreateDto
+    var newUserDto = new UserInputDto
     {
       Username = "newuser",
       Email = "newuser@test.com",
@@ -70,7 +70,7 @@ public class BaseControllerTests : SeededContextTestBase
   public async Task Update_WithValidIdAndEntity_ReturnsNoContent()
   {
     // Arrange
-    var updateUserDto = new UserCreateDto
+    var updateUserDto = new UserInputDto
     {
       Id = 1,
       Username = "updated",

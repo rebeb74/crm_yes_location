@@ -5,7 +5,7 @@ using YesLocation.Infrastructure.Persistence;
 
 namespace YesLocation.Api.Controllers;
 
-public class VehiclesController : BaseController<Vehicle, CreateVehicleDto, VehicleDto>
+public class VehiclesController : BaseController<Vehicle, VehicleInputDto, VehicleDto>
 {
   public VehiclesController(YesLocationDbContext context, IMapper mapper)
       : base(context, mapper)

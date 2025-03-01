@@ -45,7 +45,7 @@ public class MappingProfileTests
   public void Map_SimpleEntity_Works()
   {
     // Arrange
-    var role = new Role { Id = 1, Name = "Admin" };
+    var role = new Role { Id = 1, Name = "Admin", Value = 5 };
 
     // Act
     var roleDto = _mapper.Map<RoleDto>(role);
@@ -76,7 +76,7 @@ public class MappingProfileTests
     // Assert
     Assert.Equal(user.Id, userDto.Id);
     Assert.Equal("Testuser", userDto.Username); // Note the logical capitalization in User.cs
-    Assert.Equal("test@example.com", userDto.Email.ToLower());
+    Assert.Equal("test@example.com", userDto.Email?.ToLower());
     Assert.Equal(user.FirstName, userDto.FirstName);
     Assert.Equal(user.LastName, userDto.LastName);
     Assert.Equal(user.CreatedAt, userDto.CreatedAt);
@@ -87,7 +87,7 @@ public class MappingProfileTests
   public void Map_UserCreateDto_To_User_IsValid()
   {
     // Arrange
-    var userCreateDto = new UserCreateDto
+    var userCreateDto = new UserInputDto
     {
       Username = "newuser",
       Email = "new@example.com",
@@ -119,12 +119,12 @@ public class MappingProfileTests
     };
 
     // Act
-    var userCreateDto = _mapper.Map<UserCreateDto>(user);
+    var userCreateDto = _mapper.Map<UserInputDto>(user);
 
     // Assert
     Assert.Equal(user.Id, userCreateDto.Id);
     Assert.Equal("Testuser", userCreateDto.Username);
-    Assert.Equal("test@example.com", userCreateDto.Email.ToLower());
+    Assert.Equal("test@example.com", userCreateDto.Email?.ToLower());
     Assert.Equal(user.FirstName, userCreateDto.FirstName);
     Assert.Equal(user.LastName, userCreateDto.LastName);
   }
@@ -136,7 +136,8 @@ public class MappingProfileTests
     var role = new Role
     {
       Id = 1,
-      Name = "Admin"
+      Name = "Admin",
+      Value = 5
     };
 
     // Act

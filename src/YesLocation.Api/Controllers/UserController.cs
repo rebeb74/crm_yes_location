@@ -12,7 +12,7 @@ namespace YesLocation.Api.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class UserController : BaseController<User, UserCreateDto, UserDto>
+public class UserController : BaseController<User, UserInputDto, UserDto>
 {
 
   public UserController(YesLocationDbContext context, IMapper mapper)
@@ -22,7 +22,7 @@ public class UserController : BaseController<User, UserCreateDto, UserDto>
 
   // PUT: api/User/5
   [HttpPut("{id}")]
-  public override async Task<IActionResult> Update(int id, UserCreateDto userInput)
+  public override async Task<IActionResult> Update(int id, UserInputDto userInput)
   {
     var user = await _context.Users.FindAsync(id);
     if (user == null)
@@ -99,6 +99,6 @@ public class UserController : BaseController<User, UserCreateDto, UserDto>
         .Where(r => r.UserRoles.Any(ur => ur.UserId == userId))
         .ToListAsync();
 
-    return Ok(roles.Select(r => new RoleDto { Id = r.Id, Name = r.Name }));
+    return Ok(roles.Select(r => new RoleDto { Id = r.Id, Name = r.Name, Value = r.Value }));
   }
 }

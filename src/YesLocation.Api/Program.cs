@@ -26,7 +26,7 @@ builder.Services.AddCors((options) =>
         });
         options.AddPolicy("ProdCors", (coreBuilder) =>
         {
-            coreBuilder.WithOrigins("https://codeattila.ch", "https://www.codeattila.ch") // TODO: Change to your domain
+            coreBuilder.WithOrigins("https://codeattila.ch", "https://www.codeattila.ch") 
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();

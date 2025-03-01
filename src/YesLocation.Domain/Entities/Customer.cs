@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using YesLocation.Domain.Enums;
 
 namespace YesLocation.Domain.Entities;
@@ -21,6 +22,14 @@ public class Customer : BaseModel
   public DateTime? DriverLicenseExpiry { get; set; }
   public string? EmergencyContactName { get; set; }
   public string? EmergencyContactPhone { get; set; }
+
+  // Relationships
   public virtual ICollection<Booking> Bookings { get; set; } = [];
   public virtual ICollection<Quotation> Quotations { get; set; } = [];
+
+  // Calculated properties
+  [NotMapped]
+  public IEnumerable<Invoice> Invoices => Bookings
+    .Where(b => b.Invoice != null)
+    .Select(b => b.Invoice!);
 }

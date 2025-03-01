@@ -8,7 +8,16 @@ namespace YesLocation.Infrastructure.Configurations
   {
     public void Configure(EntityTypeBuilder<Invoice> builder)
     {
+      builder.Property(i => i.InvoiceNumber)
+          .HasMaxLength(50);
 
+      builder.Property(i => i.Amount)
+          .HasPrecision(7, 2);
+
+      builder.Property(i => i.PaidAmount)
+          .HasPrecision(7, 2);
+
+      // Relationships
       builder.HasOne(i => i.Booking)
           .WithOne(b => b.Invoice)
           .HasForeignKey<Booking>(b => b.InvoiceId)
@@ -17,17 +26,7 @@ namespace YesLocation.Infrastructure.Configurations
       builder.HasMany(i => i.Payments)
           .WithOne(p => p.Invoice)
           .HasForeignKey(p => p.InvoiceId)
-          .OnDelete(DeleteBehavior.Restrict);
-
-      builder.Property(i => i.InvoiceNumber)
-          .IsRequired()
-          .HasMaxLength(50);
-
-      builder.Property(i => i.Amount)
-          .HasPrecision(18, 2);
-
-      builder.Property(i => i.PaidAmount)
-          .HasPrecision(18, 2);
+          .OnDelete(DeleteBehavior.Cascade);
     }
   }
 }

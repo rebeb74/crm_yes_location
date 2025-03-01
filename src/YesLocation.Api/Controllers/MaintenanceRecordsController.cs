@@ -5,7 +5,7 @@ using YesLocation.Infrastructure.Persistence;
 
 namespace YesLocation.Api.Controllers;
 
-public class MaintenanceRecordsController : BaseController<MaintenanceRecord, CreateMaintenanceRecordDto, MaintenanceRecordDto>
+public class MaintenanceRecordsController : BaseController<MaintenanceRecord, MaintenanceRecordInputDto, MaintenanceRecordDto>
 {
   public MaintenanceRecordsController(YesLocationDbContext context, IMapper mapper)
       : base(context, mapper)

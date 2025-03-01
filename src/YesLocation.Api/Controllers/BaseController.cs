@@ -11,10 +11,10 @@ namespace YesLocation.Api.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public abstract class BaseController<TEntity, TCreateDto, TResponseDto> : ControllerBase
+public abstract class BaseController<TEntity, TInputDto, TBasicResponseDto> : ControllerBase
     where TEntity : BaseModel
-    where TCreateDto : class, IBaseDto
-    where TResponseDto : class
+    where TInputDto : class, IBaseInputModelDto
+    where TBasicResponseDto : class, IBaseModelDto
 {
   protected readonly YesLocationDbContext _context;
   protected readonly IMapper _mapper;
@@ -26,14 +26,14 @@ public abstract class BaseController<TEntity, TCreateDto, TResponseDto> : Contro
   }
 
   [HttpGet]
-  public virtual async Task<ActionResult<IEnumerable<TResponseDto>>> GetAll()
+  public virtual async Task<ActionResult<IEnumerable<TBasicResponseDto>>> GetAll()
   {
     var entities = await _context.Set<TEntity>().ToListAsync();
-    return Ok(_mapper.Map<IEnumerable<TResponseDto>>(entities));
+    return Ok(_mapper.Map<IEnumerable<TBasicResponseDto>>(entities));
   }
 
   [HttpGet("{id}")]
-  public virtual async Task<ActionResult<TResponseDto>> GetById(int id)
+  public virtual async Task<ActionResult<TBasicResponseDto>> GetById(int id)
   {
     var entity = await _context.Set<TEntity>().FindAsync(id);
 
@@ -42,22 +42,22 @@ public abstract class BaseController<TEntity, TCreateDto, TResponseDto> : Contro
       return NotFound();
     }
 
-    return Ok(_mapper.Map<TResponseDto>(entity));
+    return Ok(_mapper.Map<TBasicResponseDto>(entity));
   }
 
   [HttpPost]
-  public virtual async Task<ActionResult<TResponseDto>> Create(TCreateDto dto)
+  public virtual async Task<ActionResult<TBasicResponseDto>> Create(TInputDto dto)
   {
     var entity = _mapper.Map<TEntity>(dto);
     _context.Set<TEntity>().Add(entity);
     await _context.SaveChangesAsync();
 
-    var responseDto = _mapper.Map<TResponseDto>(entity);
+    var responseDto = _mapper.Map<TBasicResponseDto>(entity);
     return CreatedAtAction(nameof(GetById), new { id = entity.Id }, responseDto);
   }
 
   [HttpPut("{id}")]
-  public virtual async Task<IActionResult> Update(int id, TCreateDto dto)
+  public virtual async Task<IActionResult> Update(int id, TInputDto dto)
   {
     if (id != dto.Id)
     {

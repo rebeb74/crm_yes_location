@@ -5,7 +5,7 @@ using YesLocation.Infrastructure.Persistence;
 
 namespace YesLocation.Api.Controllers;
 
-public class InvoicesController : BaseController<Invoice, CreateInvoiceDto, InvoiceDto>
+public class InvoicesController : BaseController<Invoice, InvoiceInputDto, InvoiceDto>
 {
   public InvoicesController(YesLocationDbContext context, IMapper mapper)
       : base(context, mapper)

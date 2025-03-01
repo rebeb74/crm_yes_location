@@ -5,7 +5,7 @@ using YesLocation.Infrastructure.Persistence;
 
 namespace YesLocation.Api.Controllers;
 
-public class QuotationsController : BaseController<Quotation, CreateQuotationDto, CreateQuotationDto>
+public class QuotationsController : BaseController<Quotation, QuotationInputDto, QuotationDto>
 {
   public QuotationsController(YesLocationDbContext context, IMapper mapper)
       : base(context, mapper)

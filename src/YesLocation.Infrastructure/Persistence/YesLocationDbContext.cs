@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using YesLocation.Domain.Entities;
 using YesLocation.Domain.Interfaces;
+using YesLocation.Infrastructure.Extensions;
 
 namespace YesLocation.Infrastructure.Persistence;
 
@@ -21,6 +22,7 @@ public class YesLocationDbContext : DbContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        this.UpdatePaidAmounts();
         var entries = ChangeTracker.Entries<BaseModel>().Where(q => q.State == EntityState.Modified || q.State == EntityState.Added);
 
         foreach (var entry in entries)
@@ -39,6 +41,7 @@ public class YesLocationDbContext : DbContext
 
     public override int SaveChanges()
     {
+        this.UpdatePaidAmounts();
         var entries = ChangeTracker.Entries<BaseModel>().Where(q => q.State == EntityState.Modified || q.State == EntityState.Added);
 
         foreach (var entry in entries)

@@ -78,9 +78,9 @@ namespace YesLocation.Tests.Common
     {
       return new List<Role>
       {
-        new() { Id = 1, Name = "User" },
-        new() { Id = 2, Name = "Admin" },
-        new() { Id = 3, Name = "Manager" }
+        new() { Id = 1, Name = "User", Value = 3 },
+        new() { Id = 2, Name = "Admin", Value = 5 },
+        new() { Id = 3, Name = "Manager", Value = 7 }
       };
     }
 
