@@ -14,6 +14,7 @@ using YesLocation.Application.DTOs.Role;
 using YesLocation.Application.DTOs.Season;
 using YesLocation.Application.DTOs.DurationTier;
 using YesLocation.Application.DTOs.VehiclePricing;
+using YesLocation.Application.DTOs.Agency;
 
 namespace YesLocation.Api.Mappings;
 
@@ -106,5 +107,9 @@ public class MappingProfile : Profile
       .ForMember(dest => dest.Vehicle, opt => opt.ExplicitExpansion())
       .ForMember(dest => dest.Season, opt => opt.ExplicitExpansion())
       .ForMember(dest => dest.DurationTier, opt => opt.ExplicitExpansion());
+
+    // Agency mappings
+    CreateMap<AgencyInputDto, Agency>();
+    CreateMap<Agency, AgencyDto>();
   }
 }
