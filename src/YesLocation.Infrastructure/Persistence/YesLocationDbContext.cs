@@ -15,6 +15,11 @@ public class YesLocationDbContext : DbContext
     public virtual DbSet<Role> Roles { get; set; } = null!;
     public virtual DbSet<UserRole> UserRoles { get; set; } = null!;
 
+    // Nouvelles entités pour le système de tarification
+    public virtual DbSet<Season> Seasons { get; set; } = null!;
+    public virtual DbSet<DurationTier> DurationTiers { get; set; } = null!;
+    public virtual DbSet<VehiclePricing> VehiclePricings { get; set; } = null!;
+
     public YesLocationDbContext(DbContextOptions<YesLocationDbContext> options, ICurrentUserService currentUserService) : base(options)
     {
         _currentUserService = currentUserService;

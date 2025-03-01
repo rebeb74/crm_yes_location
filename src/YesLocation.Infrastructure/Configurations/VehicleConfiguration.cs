@@ -17,9 +17,6 @@ namespace YesLocation.Infrastructure.Configurations
             builder.Property(v => v.RegistrationNumber)
                 .HasMaxLength(20);
 
-            builder.Property(v => v.DailyRate)
-                .HasPrecision(7, 2);
-
             builder.Property(v => v.FuelType)
                 .HasMaxLength(30);
 

@@ -11,6 +11,9 @@ using YesLocation.Application.DTOs.Payment;
 using YesLocation.Application.DTOs.MaintenanceRecord;
 using YesLocation.Application.DTOs.User;
 using YesLocation.Application.DTOs.Role;
+using YesLocation.Application.DTOs.Season;
+using YesLocation.Application.DTOs.DurationTier;
+using YesLocation.Application.DTOs.VehiclePricing;
 
 namespace YesLocation.Api.Mappings;
 
@@ -80,7 +83,28 @@ public class MappingProfile : Profile
     // Vehicle mappings
     CreateMap<VehicleInputDto, Vehicle>()
       .ForMember(dest => dest.Bookings, opt => opt.Ignore())
-      .ForMember(dest => dest.MaintenanceRecords, opt => opt.Ignore());
+      .ForMember(dest => dest.MaintenanceRecords, opt => opt.Ignore())
+      .ForMember(dest => dest.Pricings, opt => opt.Ignore());
     CreateMap<Vehicle, VehicleDto>();
+
+    // Season mappings
+    CreateMap<SeasonInputDto, Season>()
+      .ForMember(dest => dest.VehiclePricings, opt => opt.Ignore());
+    CreateMap<Season, SeasonDto>();
+
+    // DurationTier mappings
+    CreateMap<DurationTierInputDto, DurationTier>()
+      .ForMember(dest => dest.VehiclePricings, opt => opt.Ignore());
+    CreateMap<DurationTier, DurationTierDto>();
+
+    // VehiclePricing mappings
+    CreateMap<VehiclePricingInputDto, VehiclePricing>()
+      .ForMember(dest => dest.Vehicle, opt => opt.Ignore())
+      .ForMember(dest => dest.Season, opt => opt.Ignore())
+      .ForMember(dest => dest.DurationTier, opt => opt.Ignore());
+    CreateMap<VehiclePricing, VehiclePricingDto>()
+      .ForMember(dest => dest.Vehicle, opt => opt.ExplicitExpansion())
+      .ForMember(dest => dest.Season, opt => opt.ExplicitExpansion())
+      .ForMember(dest => dest.DurationTier, opt => opt.ExplicitExpansion());
   }
 }
