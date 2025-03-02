@@ -100,4 +100,5 @@ public class VehicleInspectionsController : BaseController<VehicleInspection, Ve
 
     return await base.Create(dto);
   }
+
 }

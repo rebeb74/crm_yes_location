@@ -1,0 +1,37 @@
+1. **Configuration de NSwag.MSBuild**:
+   - Installer les packages: `dotnet add package NSwag.MSBuild NSwag.AspNetCore`
+   - Ajouter au `.csproj` une tâche de build:
+     ```xml
+     <Target Name="NSwag" AfterTargets="Build">
+       <Exec Command="$(NSwagExe_Net60) aspnetcore2openapi /project:$(MSBuildProjectFullPath) /output:swagger.json" />
+       <Exec Command="$(NSwagExe_Net60) openapi2typescript /input:swagger.json /output:../client/src/app/api-client.ts /template:Angular /serviceHost:baseUrl" />
+     </Target>
+     ```
+
+2. **Créer le projet Angular avec composants standalone**:
+   - `ng new yes-location-client --standalone --style=scss`
+   - Utiliser l'API générée par NSwag dans un service injectable
+
+3. **Configurer Tailwind CSS + Angular Material**:
+   - `ng add @angular/material`
+   - `npm install -D tailwindcss postcss autoprefixer`
+   - `npx tailwindcss init`
+   - Configurer `tailwind.config.js` et ajouter les directives à `styles.scss`
+
+4. **Installer et configurer les outils complémentaires**:
+   - Akita: `npm install @datorama/akita`
+   - i18n: `npm install @ngx-translate/core @ngx-translate/http-loader`
+   - Jest: `ng add @briebug/jest-schematic`
+
+5. **Structure recommandée pour composants standalone**:
+   - `app/` - Composants racine
+   - `features/` - Groupes de fonctionnalités (composants standalone)
+   - `shared/` - Composants réutilisables
+   - `core/` - Services, API client, gardes
+   - `lib/` - Utilitaires et interfaces
+
+6. **Importer l'API client dans votre app**:
+   - Créer un `apiProvider` pour les composants standalone
+   - Utiliser `inject()` dans les composants pour accéder aux services API
+
+Cette configuration fournit une base solide pour développer votre application Angular moderne avec des composants standalone, une génération automatique du client API, et une UI élégante combinant Material et Tailwind.
