@@ -11,6 +11,7 @@ pipeline {
         JWT_TOKEN_KEY = credentials('yes-location-jwt-token-key')
         JWT_ISSUER = 'yes-location'
         JWT_AUDIENCE = 'yes-location'
+        DEFAULT_PASSWORD = credentials('yes-location-default-password')
     }
 
     stages {
@@ -50,6 +51,9 @@ pipeline {
     "TokenKey": "${JWT_TOKEN_KEY}",
     "Issuer": "${JWT_ISSUER}",
     "Audience": "${JWT_AUDIENCE}"
+  },
+  "AppSettings": {
+    "DefaultPassword": "${DEFAULT_PASSWORD}"
   }
 }
 """
@@ -60,7 +64,7 @@ pipeline {
                     DOCKER_BUILDKIT=0 docker build -f backend/Dockerfile.dev -t yes-location-dev ./backend
 
                     # Exécuter la compilation et les tests dans le conteneur
-                    docker run --rm -v "${WORKSPACE}/backend:/app" yes-location-dev bash -c "dotnet restore && dotnet build -c Release && dotnet test"
+                    docker run --rm -v "${WORKSPACE}/backend:/app" yes-location-dev bash -c "cd /app && dotnet restore && dotnet build -c Release && dotnet test"
                 '''
       }
         }
