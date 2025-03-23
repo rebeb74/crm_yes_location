@@ -37,12 +37,7 @@ pipeline {
                     DOCKER_BUILDKIT=0 docker build -f backend/Dockerfile.dev -t yes-location-dev ./backend
 
                     # Exécuter la compilation et les tests dans le conteneur
-                    docker run --rm -v ${WORKSPACE}/backend:/app yes-location-dev /bin/bash -c "
-                        dotnet restore &&
-                        dotnet build -c Release &&
-                        dotnet test &&
-                        dotnet publish -c Release -o publish
-                    "
+                    docker run --rm -v ${WORKSPACE}/backend:/app yes-location-dev bash -c "dotnet restore && dotnet build -c Release && dotnet test && dotnet publish -c Release -o publish"
                 '''
       }
         }
