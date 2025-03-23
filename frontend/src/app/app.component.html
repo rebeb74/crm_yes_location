@@ -1,0 +1,233 @@
+<div
+  class="min-h-screen bg-base-100 text-base-content transition-colors duration-300"
+>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">{{ title }}</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Accueil</a>
+          </li>
+        </ul>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            [checked]="isDarkMode"
+            (change)="toggleDarkMode()"
+          />
+          <label class="form-check-label text-light">Mode sombre</label>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4">
+    <!-- Section de démonstration des couleurs Bootstrap -->
+    <section class="mb-5">
+      <h2 class="h4 mb-4">Démonstration des couleurs Bootstrap</h2>
+      <div class="row g-4">
+        <!-- Couleurs primaires -->
+        <div class="col-md-4">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <h3 class="card-title h5">Couleur Primaire</h3>
+              <p class="card-text">
+                Cette couleur est utilisée pour les éléments principaux
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-secondary text-white">
+            <div class="card-body">
+              <h3 class="card-title h5">Couleur Secondaire</h3>
+              <p class="card-text">
+                Cette couleur est utilisée pour les éléments secondaires
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-accent text-white">
+            <div class="card-body">
+              <h3 class="card-title h5">Couleur d'Accent</h3>
+              <p class="card-text">
+                Cette couleur est utilisée pour mettre en évidence
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- États -->
+        <div class="col-md-4">
+          <div class="card bg-success text-white">
+            <div class="card-body">
+              <h3 class="card-title h5">Succès</h3>
+              <p class="card-text">Pour les messages de confirmation</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-warning text-dark">
+            <div class="card-body">
+              <h3 class="card-title h5">Avertissement</h3>
+              <p class="card-text">Pour les messages d'avertissement</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-danger text-white">
+            <div class="card-body">
+              <h3 class="card-title h5">Erreur</h3>
+              <p class="card-text">Pour les messages d'erreur</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section de démonstration des composants ng-bootstrap -->
+    <section class="mb-5">
+      <h2 class="h4 mb-4">Démonstration des composants ng-bootstrap</h2>
+
+      <!-- Boutons -->
+      <div class="mb-4">
+        <h3 class="h5 mb-3">Boutons</h3>
+        <button class="btn btn-primary me-2">Primary</button>
+        <button class="btn btn-secondary me-2">Secondary</button>
+        <button class="btn btn-success me-2">Success</button>
+        <button class="btn btn-danger me-2">Danger</button>
+        <button class="btn btn-warning me-2">Warning</button>
+        <button class="btn btn-info me-2">Info</button>
+        <button class="btn btn-light me-2">Light</button>
+        <button class="btn btn-dark">Dark</button>
+      </div>
+
+      <!-- Alertes -->
+      <div class="mb-4">
+        <h3 class="h5 mb-3">Alertes</h3>
+        <div class="alert alert-primary" role="alert">Une alerte primaire</div>
+        <div class="alert alert-secondary" role="alert">
+          Une alerte secondaire
+        </div>
+        <div class="alert alert-success" role="alert">Une alerte de succès</div>
+        <div class="alert alert-danger" role="alert">Une alerte d'erreur</div>
+        <div class="alert alert-warning" role="alert">
+          Une alerte d'avertissement
+        </div>
+        <div class="alert alert-info" role="alert">
+          Une alerte d'information
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="mb-4">
+        <h3 class="h5 mb-3">Badges</h3>
+        <span class="badge bg-primary me-2">Primary</span>
+        <span class="badge bg-secondary me-2">Secondary</span>
+        <span class="badge bg-success me-2">Success</span>
+        <span class="badge bg-danger me-2">Danger</span>
+        <span class="badge bg-warning me-2">Warning</span>
+        <span class="badge bg-info me-2">Info</span>
+        <span class="badge bg-light me-2">Light</span>
+        <span class="badge bg-dark">Dark</span>
+      </div>
+
+      <!-- Progress -->
+      <div class="mb-4">
+        <h3 class="h5 mb-3">Barres de progression</h3>
+        <div class="progress mb-2">
+          <div
+            class="progress-bar bg-primary"
+            role="progressbar"
+            style="width: 25%"
+          ></div>
+        </div>
+        <div class="progress mb-2">
+          <div
+            class="progress-bar bg-success"
+            role="progressbar"
+            style="width: 50%"
+          ></div>
+        </div>
+        <div class="progress mb-2">
+          <div
+            class="progress-bar bg-info"
+            role="progressbar"
+            style="width: 75%"
+          ></div>
+        </div>
+        <div class="progress">
+          <div
+            class="progress-bar bg-warning"
+            role="progressbar"
+            style="width: 100%"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Spinners -->
+      <div class="mb-4">
+        <h3 class="h5 mb-3">Spinners</h3>
+        <div class="spinner-border text-primary me-2" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <div class="spinner-border text-secondary me-2" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <div class="spinner-border text-success me-2" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <div class="spinner-border text-danger me-2" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <div class="spinner-border text-warning me-2" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <div class="spinner-border text-info" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+
+      <!-- Formulaires -->
+      <div class="mb-4">
+        <h3 class="h5 mb-3">Formulaires</h3>
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Email</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" />
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label"
+            >Mot de passe</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            id="exampleInputPassword1"
+          />
+        </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+          <label class="form-check-label" for="exampleCheck1">Cochez-moi</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Soumettre</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-base-200 p-4 mt-auto">
+    <div class="container mx-auto text-center">
+      <p>YesLocation CRM - Démonstration du système de thème</p>
+    </div>
+  </footer>
+</div>

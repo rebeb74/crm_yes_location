@@ -23,3 +23,7 @@ dotnet ef migrations add InitialCreate --project src/YesLocation.Infrastructure 
 
 # 4. Appliquer la migration
 dotnet ef database update --project src/YesLocation.Infrastructure --startup-project src/YesLocation.Api
+
+#0061CE
+#40B1B7
+#8531A9

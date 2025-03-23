@@ -3,17 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "ng": "cd src/YesLocation.Client && npm run ng",
-    "start": "cd src/YesLocation.Client && npm run start",
-    "build": "cd src/YesLocation.Client && npm run build",
-    "watch": "cd src/YesLocation.Client && npm run watch",
-    "test": "cd src/YesLocation.Client && npm run test",
-    "kiota": "kiota generate -l TypeScript -d http://localhost:5000/swagger/v1/swagger.json -o ./src/YesLocation.Client/src/app/core/api/kiota-generated",
-    "dotnet:run": "dotnet run --project src/YesLocation.Api/YesLocation.Api.csproj",
-    "dev": "concurrently \"npm run dotnet:run\" \"npm run start\"",
-    "client:install": "cd src/YesLocation.Client && npm install"
+    "kiota": "kiota generate -l TypeScript -d http://localhost:5000/swagger/v1/swagger.json -o ./frontend/src/app/core/api/kiota-generated",
+    "dotnet:run": "dotnet run --project backend/YesLocation.Api/YesLocation.Api.csproj",
+    "dotnet:migrate": "dotnet ef database update --project backend/YesLocation.Infrastructure/YesLocation.Infrastructure.csproj --startup-project backend/YesLocation.Api/YesLocation.Api.csproj",
+    "dotnet:migrate:rollback": "dotnet ef database update 0 --project backend/YesLocation.Infrastructure/YesLocation.Infrastructure.csproj --startup-project backend/YesLocation.Api/YesLocation.Api.csproj",
+    "dotnet:migrate:remove": "dotnet ef migrations remove --project backend/YesLocation.Infrastructure/YesLocation.Infrastructure.csproj --startup-project backend/YesLocation.Api/YesLocation.Api.csproj",
+    "dotnet:migrate:create": "dotnet ef migrations add --project backend/YesLocation.Infrastructure/YesLocation.Infrastructure.csproj --startup-project backend/YesLocation.Api/YesLocation.Api.csproj",
+    "client:install": "cd frontend && npm install",
+    "client:start": "cd frontend && ng serve -o"
   },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
-  }
+  "devDependencies": {}
 }

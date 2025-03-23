@@ -31,6 +31,8 @@ obj/
 secrets.json
 secret.json
 .env
+.env.*
+!.env.example
 
 # ASP.NET Core publish outputs
 *.pubxml
@@ -40,7 +42,7 @@ secret.json
 .nuget/
 packages/
 
-# EF Core Migrations folder (optional: if auto-generated files aren't needed)
+# EF Core Migrations folder
 Migrations/
 
 # Visual Studio Code workspace settings
@@ -59,7 +61,6 @@ docker-compose.override.yml
 docker-compose.debug.yml
 *.dockerfile
 
-env/*.env
-
-src/YesLocation.Api/appsettings.Development.json
-src/YesLocation.Api/appsettings.Production.json
+# Configuration files with sensitive data
+**/appsettings.Development.json
+**/appsettings.Production.json

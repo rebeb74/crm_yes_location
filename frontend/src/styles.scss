@@ -1,0 +1,114 @@
+/* Import Bootstrap */
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+/* Variables Bootstrap personnalisées */
+:root {
+  /* Les variables seront définies dynamiquement par le ThemeService */
+}
+
+/* Styles globaux */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+/* Styles pour la couleur accent */
+.btn-accent {
+  background-color: var(--bs-accent);
+  border-color: var(--bs-accent);
+  color: white;
+
+  &:hover {
+    background-color: var(--bs-accent);
+    border-color: var(--bs-accent);
+    opacity: 0.9;
+  }
+}
+
+.text-accent {
+  color: var(--bs-accent) !important;
+}
+
+.bg-accent {
+  background-color: var(--bs-accent) !important;
+}
+
+.border-accent {
+  border-color: var(--bs-accent) !important;
+}
+
+/* Import du reste de Bootstrap */
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/tables";
+@import "bootstrap/scss/forms";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/dropdown";
+@import "bootstrap/scss/button-group";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+@import "bootstrap/scss/card";
+@import "bootstrap/scss/accordion";
+@import "bootstrap/scss/breadcrumb";
+@import "bootstrap/scss/pagination";
+@import "bootstrap/scss/badge";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/progress";
+@import "bootstrap/scss/list-group";
+@import "bootstrap/scss/close";
+@import "bootstrap/scss/modal";
+@import "bootstrap/scss/tooltip";
+@import "bootstrap/scss/popover";
+@import "bootstrap/scss/carousel";
+@import "bootstrap/scss/spinners";
+@import "bootstrap/scss/offcanvas";
+@import "bootstrap/scss/placeholders";
+@import "bootstrap/scss/helpers";
+@import "bootstrap/scss/utilities/api";
+
+/* Thème sombre */
+[data-bs-theme="dark"] {
+  --bs-primary: #005bc1;
+  --bs-secondary: #338e6c;
+  --bs-accent: #6a2787;
+  --bs-body-bg: oklch(0.2 0 0);
+  --bs-body-color: oklch(0.9 0 0);
+  --bs-surface: oklch(0.25 0 0);
+}
+
+/* Styles globaux */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
