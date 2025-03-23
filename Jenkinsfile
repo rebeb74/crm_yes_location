@@ -8,7 +8,7 @@ pipeline {
         MYSQL_DATABASE = 'yes_location'
         MYSQL_USER = 'yes_location'
         MYSQL_PASSWORD = credentials('yes-location-mysql-user-password')
-        JWT_TOKEN_KEY = credentials('jwt-token-key')
+        JWT_TOKEN_KEY = credentials('yes-locationjwt-token-key')
         JWT_ISSUER = 'yes-location'
         JWT_AUDIENCE = 'yes-location'
     }
@@ -35,9 +35,9 @@ pipeline {
 
         stage('Build and Test') {
       steps {
-        sh '''
-                    # Créer le fichier appsettings.json temporaire pour les tests
-                    cat > backend/YesLocation.Api/appsettings.json << EOL
+        script {
+          // Créer le fichier appsettings.json temporaire pour les tests
+          writeFile file: 'backend/YesLocation.Api/appsettings.json', text: """
 {
   "Logging": {
     "LogLevel": {
@@ -52,8 +52,10 @@ pipeline {
     "Audience": "${JWT_AUDIENCE}"
   }
 }
-EOL
+"""
+        }
 
+        sh '''
                     # Construire l'image de développement
                     DOCKER_BUILDKIT=0 docker build -f backend/Dockerfile.dev -t yes-location-dev ./backend
 
@@ -84,7 +86,9 @@ EOL
 
     post {
         always {
-      cleanWs()
+      node {
+        cleanWs()
+      }
         }
         success {
       echo 'Déploiement réussi!'
