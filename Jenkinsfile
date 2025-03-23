@@ -30,22 +30,19 @@ pipeline {
       }
         }
 
-        stage('Build') {
+        stage('Build and Test') {
       steps {
         sh '''
-                    cd backend
-                    dotnet restore
-                    dotnet build -c Release
-                    dotnet publish -c Release -o publish
-                '''
-      }
-        }
+                    # Construire l'image de développement
+                    docker build -f backend/Dockerfile.dev -t yes-location-dev ./backend
 
-        stage('Test') {
-      steps {
-        sh '''
-                    cd backend
-                    dotnet test
+                    # Exécuter la compilation et les tests dans le conteneur
+                    docker run --rm -v ${WORKSPACE}/backend:/app yes-location-dev /bin/bash -c "
+                        dotnet restore &&
+                        dotnet build -c Release &&
+                        dotnet test &&
+                        dotnet publish -c Release -o publish
+                    "
                 '''
       }
         }
