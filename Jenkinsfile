@@ -8,7 +8,7 @@ pipeline {
         MYSQL_DATABASE = 'yes_location'
         MYSQL_USER = 'yes_location'
         MYSQL_PASSWORD = credentials('yes-location-mysql-user-password')
-        JWT_TOKEN_KEY = credentials('yes-locationjwt-token-key')
+        JWT_TOKEN_KEY = credentials('yes-location-jwt-token-key')
         JWT_ISSUER = 'yes-location'
         JWT_AUDIENCE = 'yes-location'
     }
@@ -86,7 +86,9 @@ pipeline {
 
     post {
         always {
-      cleanWs()
+      node {
+        cleanWs()
+      }
         }
         success {
       echo 'Déploiement réussi!'
