@@ -8,6 +8,9 @@ pipeline {
         MYSQL_DATABASE = 'yes_location'
         MYSQL_USER = 'yes_location'
         MYSQL_PASSWORD = credentials('yes-location-mysql-user-password')
+        JWT_TOKEN_KEY = credentials('jwt-token-key')
+        JWT_ISSUER = 'yes-location'
+        JWT_AUDIENCE = 'yes-location'
     }
 
     stages {
@@ -33,11 +36,29 @@ pipeline {
         stage('Build and Test') {
       steps {
         sh '''
+                    # Créer le fichier appsettings.json temporaire pour les tests
+                    cat > backend/YesLocation.Api/appsettings.json << EOL
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "Jwt": {
+    "TokenKey": "${JWT_TOKEN_KEY}",
+    "Issuer": "${JWT_ISSUER}",
+    "Audience": "${JWT_AUDIENCE}"
+  }
+}
+EOL
+
                     # Construire l'image de développement
                     DOCKER_BUILDKIT=0 docker build -f backend/Dockerfile.dev -t yes-location-dev ./backend
 
                     # Exécuter la compilation et les tests dans le conteneur
-                    docker run --rm -v ${WORKSPACE}/backend:/app yes-location-dev bash -c "dotnet restore && dotnet build -c Release && dotnet test && dotnet publish -c Release -o publish"
+                    docker run --rm -v "${WORKSPACE}/backend:/app" yes-location-dev bash -c "dotnet restore && dotnet build -c Release && dotnet test"
                 '''
       }
         }
