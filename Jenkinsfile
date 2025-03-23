@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_BUILDKIT = '1'
-        COMPOSE_DOCKER_CLI_BUILD = '1'
+        DOCKER_BUILDKIT = '0'
+        COMPOSE_DOCKER_CLI_BUILD = '0'
         MYSQL_ROOT_PASSWORD = credentials('yes-location-mysql-root-password')
         MYSQL_DATABASE = 'yes_location'
         MYSQL_USER = 'yes_location'
@@ -34,7 +34,7 @@ pipeline {
       steps {
         sh '''
                     # Construire l'image de développement
-                    docker build -f backend/Dockerfile.dev -t yes-location-dev ./backend
+                    DOCKER_BUILDKIT=0 docker build -f backend/Dockerfile.dev -t yes-location-dev ./backend
 
                     # Exécuter la compilation et les tests dans le conteneur
                     docker run --rm -v ${WORKSPACE}/backend:/app yes-location-dev /bin/bash -c "
