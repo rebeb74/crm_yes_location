@@ -24,7 +24,7 @@ pipeline {
             . ${NVM_DIR}/nvm.sh
             nvm use --silent 18.19.0
             npm install
-            npm run build
+            npm run build --configuration production
         """
       }
     }
