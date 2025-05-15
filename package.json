@@ -10,7 +10,8 @@
     "dotnet:migrate:remove": "dotnet ef migrations remove --project backend/YesLocation.Infrastructure/YesLocation.Infrastructure.csproj --startup-project backend/YesLocation.Api/YesLocation.Api.csproj",
     "dotnet:migrate:create": "dotnet ef migrations add --project backend/YesLocation.Infrastructure/YesLocation.Infrastructure.csproj --startup-project backend/YesLocation.Api/YesLocation.Api.csproj",
     "client:install": "cd frontend && npm install",
-    "client:start": "cd frontend && ng serve -o"
+    "client:start": "cd frontend && ng serve -o",
+    "client:build": "cd frontend && ng build --configuration production"
   },
   "devDependencies": {}
 }
