@@ -10,6 +10,8 @@ pipeline {
       steps {
         sh '''
             cd /home/data/crm_yes_location
+            chown -R jenkins:jenkins /home/data/crm_yes_location
+            chmod -R 777 /home/data/crm_yes_location
             git config --global --add safe.directory /home/data/crm_yes_location
             git checkout main
             git reset --hard HEAD
