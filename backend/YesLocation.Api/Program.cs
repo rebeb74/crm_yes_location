@@ -24,7 +24,8 @@ builder.Services.AddCors((options) =>
                     "http://localhost:5000",      // HTTP
                     "https://localhost:5000",     // HTTPS
                     "http://localhost:5001",
-                    "https://localhost:5001")
+                    "https://localhost:5001",
+                    "https://yes-location.codeattila.ch")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
