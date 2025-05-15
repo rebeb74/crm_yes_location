@@ -24,7 +24,10 @@ pipeline {
             . ${NVM_DIR}/nvm.sh
             nvm use --silent 18.19.0
             npm install
-            npm run build --configuration production
+            # Désactiver les analytics Angular
+            npx ng config --global cli.analytics false
+            # Build en production
+            npx ng build --configuration production
         """
       }
     }
@@ -35,13 +38,14 @@ pipeline {
             # Build l'image Docker
             docker build -t yes-location-api .
             # Arrêter et supprimer l'ancien container s'il existe
-            docker stop yes-location-api || true
-            docker rm yes-location-api || true
+            docker rm -f yes-location-api || true
             # Démarrer le nouveau container
             docker run -d --name yes-location-api \
               -p 5000:80 \
               -v /home/data/crm_yes_location/backend/data:/app/data \
               yes-location-api
+            # Vérifier que le container est bien démarré
+            docker ps | grep yes-location-api
         '''
       }
     }
