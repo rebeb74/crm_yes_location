@@ -10,6 +10,7 @@ pipeline {
       steps {
         sh '''
             cd /home/data/crm_yes_location
+            git config --global --add safe.directory /home/data/crm_yes_location
             git checkout main
             git reset --hard HEAD
             git pull
@@ -21,7 +22,7 @@ pipeline {
         sh """
             cd /home/data/crm_yes_location/frontend
             . ${NVM_DIR}/nvm.sh
-            nvm use 18.19.0
+            nvm use --silent 18.19.0
             npm install
             npm run build
         """
