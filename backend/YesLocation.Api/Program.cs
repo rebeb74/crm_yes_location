@@ -31,7 +31,7 @@ builder.Services.AddCors((options) =>
         });
         options.AddPolicy("ProdCors", (coreBuilder) =>
         {
-            coreBuilder.WithOrigins("https://codeattila.ch", "https://www.codeattila.ch")
+            coreBuilder.WithOrigins("https://yes-location.codeattila.ch")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
