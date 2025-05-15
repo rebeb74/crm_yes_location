@@ -16,28 +16,33 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddCors((options) =>
+{
+    Console.WriteLine("Configuring CORS policies...");
+
+    options.AddPolicy("DevCors", (coreBuilder) =>
     {
-        options.AddPolicy("DevCors", (coreBuilder) =>
-        {
-            coreBuilder.WithOrigins(
-                    "http://localhost:4200",      // Angular dev server
-                    "http://localhost:5000",      // HTTP
-                    "https://localhost:5000",     // HTTPS
-                    "http://localhost:5001",
-                    "https://localhost:5001",
-                    "https://yes-location.codeattila.ch")
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
-        });
-        options.AddPolicy("ProdCors", (coreBuilder) =>
-        {
-            coreBuilder.WithOrigins("https://yes-location.codeattila.ch")
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
-        });
+        Console.WriteLine("Configuring DevCors policy");
+        coreBuilder.WithOrigins(
+                "http://localhost:4200",      // Angular dev server
+                "http://localhost:5000",      // HTTP
+                "https://localhost:5000",     // HTTPS
+                "http://localhost:5001",
+                "https://localhost:5001",
+                "https://yes-location.codeattila.ch")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
+
+    options.AddPolicy("ProdCors", (coreBuilder) =>
+    {
+        Console.WriteLine("Configuring ProdCors policy");
+        coreBuilder.WithOrigins("https://yes-location.codeattila.ch")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
 
 string? tokenKeyString = builder.Configuration["Jwt:TokenKey"];
 
@@ -148,21 +153,40 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
+Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Déplacer UseCors avant UseHttpsRedirection
+// Déplacer UseCors avant UseHttpsRedirection et ajouter des logs
 if (app.Environment.IsDevelopment())
 {
+    Console.WriteLine("Using DevCors policy");
     app.UseCors("DevCors");
 }
 else
 {
+    Console.WriteLine("Using ProdCors policy");
     app.UseCors("ProdCors");
 }
+
+// Ajouter un middleware pour logger les en-têtes CORS
+app.Use(async (context, next) =>
+{
+    context.Response.OnStarting(() =>
+    {
+        Console.WriteLine("CORS Headers:");
+        foreach (var header in context.Response.Headers)
+        {
+            Console.WriteLine($"{header.Key}: {string.Join(", ", header.Value)}");
+        }
+        return Task.CompletedTask;
+    });
+    await next();
+});
 
 app.UseHttpsRedirection();
 

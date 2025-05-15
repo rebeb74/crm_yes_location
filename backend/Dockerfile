@@ -13,4 +13,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 EXPOSE 80
-ENTRYPOINT ["dotnet", "YesLocation.Api/YesLocation.Api.dll"]
+ENTRYPOINT ["dotnet", "YesLocation.Api.dll"]
