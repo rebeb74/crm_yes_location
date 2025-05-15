@@ -39,11 +39,11 @@ pipeline {
             npm install
             npm run build
             # Créer le dossier de destination s'il n'existe pas
-            sudo mkdir -p /home/data/yes-location
+            mkdir -p /home/data/yes-location
             # Copier tous les fichiers de build
-            sudo cp -r dist/* /home/data/yes-location/
+            cp -r dist/* /home/data/yes-location/
             # S'assurer que les permissions sont correctes
-            sudo chown -R www-data:www-data /home/data/yes-location
+            chown -R www-data:www-data /home/data/yes-location
         """
       }
     }
