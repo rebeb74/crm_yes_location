@@ -37,18 +37,10 @@ builder.Services.AddCors((options) =>
     options.AddPolicy("ProdCors", (coreBuilder) =>
     {
         Console.WriteLine("Configuring ProdCors policy");
-        var allowedOrigins = new[] { "https://yes-location.codeattila.ch" };
-        Console.WriteLine($"Allowed origins: {string.Join(", ", allowedOrigins)}");
-
-        coreBuilder.SetIsOriginAllowed(origin =>
-        {
-            var isAllowed = allowedOrigins.Contains(origin);
-            Console.WriteLine($"Checking origin {origin}: {isAllowed}");
-            return isAllowed;
-        })
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
+        coreBuilder.WithOrigins("https://yes-location.codeattila.ch")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
 });
 
