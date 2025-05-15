@@ -150,20 +150,23 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseCors("DevCors");
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+// Déplacer UseCors avant UseHttpsRedirection
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors("DevCors");
 }
 else
 {
     app.UseCors("ProdCors");
-    app.UseHttpsRedirection();
 }
 
-// app.UseHttpsRedirection(); // to keep ?
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.UseMiddleware<CurrentUserMiddleware>();
