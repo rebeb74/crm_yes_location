@@ -15,12 +15,27 @@ pipeline {
         '''
       }
     }
+    stage('Setup Node.js') {
+      steps {
+        sh """
+            # Installer NVM si pas déjà installé
+            if [ ! -d "${NVM_DIR}" ]; then
+              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+            fi
+            # Charger NVM
+            . ${NVM_DIR}/nvm.sh
+            # Installer Node.js 18 si pas déjà installé
+            nvm install 18.19.0
+            nvm use 18.19.0
+        """
+      }
+    }
     stage('Build Frontend') {
       steps {
         sh """
             cd frontend
             . ${NVM_DIR}/nvm.sh
-            nvm use --silent 16.20.0
+            nvm use 18.19.0
             npm install
             npm run build
             # Copier les fichiers de build vers le dossier Apache
