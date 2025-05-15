@@ -10,8 +10,6 @@ pipeline {
       steps {
         sh '''
             cd /home/data/crm_yes_location
-            chown -R jenkins:jenkins /home/data/crm_yes_location
-            chmod -R 777 /home/data/crm_yes_location
             git config --global --add safe.directory /home/data/crm_yes_location
             git checkout main
             git reset --hard HEAD
@@ -42,7 +40,7 @@ pipeline {
             # Démarrer le nouveau container
             docker run -d --name yes-location-api \
               -p 5000:80 \
-              -v /home/data/yes-location-api:/app/data \
+              -v /home/data/crm_yes_location/backend/data:/app/data \
               yes-location-api
         '''
       }
