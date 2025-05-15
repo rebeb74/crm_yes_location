@@ -37,10 +37,18 @@ builder.Services.AddCors((options) =>
     options.AddPolicy("ProdCors", (coreBuilder) =>
     {
         Console.WriteLine("Configuring ProdCors policy");
-        coreBuilder.WithOrigins("https://yes-location.codeattila.ch")
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
+        var allowedOrigins = new[] { "https://yes-location.codeattila.ch" };
+        Console.WriteLine($"Allowed origins: {string.Join(", ", allowedOrigins)}");
+
+        coreBuilder.SetIsOriginAllowed(origin =>
+        {
+            var isAllowed = allowedOrigins.Contains(origin);
+            Console.WriteLine($"Checking origin {origin}: {isAllowed}");
+            return isAllowed;
+        })
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
     });
 });
 
@@ -155,17 +163,13 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-// Déplacer UseCors avant UseHttpsRedirection et ajouter des logs
+// Déplacer UseCors tout au début du pipeline
 if (app.Environment.IsDevelopment())
 {
     Console.WriteLine("Using DevCors policy");
     app.UseCors("DevCors");
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {
