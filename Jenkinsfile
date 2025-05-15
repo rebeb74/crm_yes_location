@@ -9,48 +9,28 @@ pipeline {
     stage('Pull') {
       steps {
         sh '''
+            cd /home/data/crm_yes_location
             git checkout main
             git reset --hard HEAD
             git pull
         '''
       }
     }
-    stage('Setup Node.js') {
-      steps {
-        sh """
-            # Installer NVM si pas déjà installé
-            if [ ! -d "${NVM_DIR}" ]; then
-              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-            fi
-            # Charger NVM
-            . ${NVM_DIR}/nvm.sh
-            # Installer Node.js 18 si pas déjà installé
-            nvm install 18.19.0
-            nvm use 18.19.0
-        """
-      }
-    }
     stage('Build Frontend') {
       steps {
         sh """
-            cd frontend
+            cd /home/data/crm_yes_location/frontend
             . ${NVM_DIR}/nvm.sh
             nvm use 18.19.0
             npm install
             npm run build
-            # Créer le dossier de destination s'il n'existe pas
-            mkdir -p /home/data/yes-location
-            # Copier tous les fichiers de build
-            cp -r dist/* /home/data/yes-location/
-            # S'assurer que les permissions sont correctes
-            chown -R www-data:www-data /home/data/yes-location
         """
       }
     }
     stage('Build and Deploy Backend') {
       steps {
         sh '''
-            cd backend
+            cd /home/data/crm_yes_location/backend
             # Build l'image Docker
             docker build -t yes-location-api .
             # Arrêter et supprimer l'ancien container s'il existe
