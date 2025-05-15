@@ -17,11 +17,9 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddCors((options) =>
 {
-    Console.WriteLine("Configuring CORS policies...");
 
     options.AddPolicy("DevCors", (coreBuilder) =>
     {
-        Console.WriteLine("Configuring DevCors policy");
         coreBuilder.WithOrigins(
                 "http://localhost:4200",      // Angular dev server
                 "http://localhost:5000",      // HTTP
@@ -35,14 +33,11 @@ builder.Services.AddCors((options) =>
 
     options.AddPolicy("ProdCors", (coreBuilder) =>
     {
-        Console.WriteLine("Configuring ProdCors policy");
         var allowedOrigins = new[] { "https://yes-location.codeattila.ch" };
-        Console.WriteLine($"Allowed origins: {string.Join(", ", allowedOrigins)}");
 
         coreBuilder.SetIsOriginAllowed(origin =>
         {
             var isAllowed = allowedOrigins.Contains(origin);
-            Console.WriteLine($"Checking origin {origin}: {isAllowed}");
             return isAllowed;
         })
         .AllowAnyMethod()
@@ -85,7 +80,6 @@ builder.Services.AddDbContext<YesLocationDbContext>((serviceProvider, options) =
     if (env?.IsDevelopment() ?? false)
     {
         options
-            .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors();
     }
@@ -160,36 +154,18 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
 
 // Déplacer UseCors tout au début du pipeline
 if (app.Environment.IsDevelopment())
 {
-    Console.WriteLine("Using DevCors policy");
     app.UseCors("DevCors");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 else
 {
-    Console.WriteLine("Using ProdCors policy");
     app.UseCors("ProdCors");
 }
-
-// Ajouter un middleware pour logger les en-têtes CORS
-app.Use(async (context, next) =>
-{
-    context.Response.OnStarting(() =>
-    {
-        Console.WriteLine("CORS Headers:");
-        foreach (var header in context.Response.Headers)
-        {
-            Console.WriteLine($"{header.Key}: {string.Join(", ", header.Value)}");
-        }
-        return Task.CompletedTask;
-    });
-    await next();
-});
 
 app.UseHttpsRedirection();
 
